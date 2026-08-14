@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
 
 const CLASS_NAMES = ["HPV", "HSV", "Syphilis"];
 const SKIN_THRESHOLD = 0.05;
@@ -192,6 +193,28 @@ export default function Classify() {
             <p className="text-xs text-slate-500">
               This is a preliminary screening result, not a confirmed medical diagnosis.
             </p>
+            <button
+  onClick={async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Log in to save results.");
+      return;
+    }
+    try {
+      await axios.post(
+        "http://localhost:8000/results/save",
+        { condition: state.condition, confidence: state.confidence },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Result saved.");
+    } catch {
+      alert("Failed to save result.");
+    }
+  }}
+  className="mt-3 text-xs text-green-700 underline hover:text-green-900"
+>
+  Save this result
+</button>
           </div>
         )}
 

@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException, Header
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from database import db, users_collection
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from database import db, users_collection, results_collection
 from models import UserRegister, UserLogin
+from result_model import SaveResult
 from auth_service import hash_password, verify_password, create_token, verify_token
 from datetime import datetime
 
@@ -14,6 +16,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+security = HTTPBearer()
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
+    """Shared auth check — used by every protected route below."""
+    user_id = verify_token(credentials.credentials)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return user_id
+
 
 @app.get("/")
 def root():
@@ -51,14 +63,22 @@ async def login(credentials: UserLogin):
     return {"token": token}
 
 @app.get("/auth/verify")
-async def verify(authorization: str = Header(None)):
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing token")
-
-    token = authorization.replace("Bearer ", "")
-    user_id = verify_token(token)
-
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-
+async def verify(user_id: str = Depends(get_current_user)):
     return {"userId": user_id}
+
+@app.post("/results/save")
+async def save_result(result: SaveResult, user_id: str = Depends(get_current_user)):
+    await results_collection.insert_one({
+        "user_id": user_id,
+        "predicted_condition": result.condition,
+        "confidence_score": result.confidence,
+        "created_at": datetime.utcnow(),
+    })
+    return {"message": "Result saved"}
+
+@app.get("/results/history")
+async def get_history(user_id: str = Depends(get_current_user)):
+    results = await results_collection.find({"user_id": user_id}).sort("created_at", -1).to_list(100)
+    for r in results:
+        r["_id"] = str(r["_id"])
+    return {"results": results}
