@@ -3,10 +3,12 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import Toast from "../components/Toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
  return (
   <main className="min-h-screen bg-white">
@@ -43,7 +45,8 @@ export default function Login() {
       password,
     });
     localStorage.setItem("token", res.data.token);
-    window.location.href = "/dashboard";
+    setShowToast(true);
+setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
   } catch (err) {
     alert("Invalid email or password.");
   }
@@ -105,7 +108,9 @@ export default function Login() {
 
       </div>
     </div>
-
+{showToast && (
+  <Toast message="Logged in successfully" onClose={() => setShowToast(false)} />
+)}
   </main>
 );
 }

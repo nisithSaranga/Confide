@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,11 +25,13 @@ export default function ForgotPassword() {
 
             <form
               className="space-y-6"
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                // TEMPORARY — no backend/email service exists yet.
-                // Real version will call a FastAPI endpoint that generates
-                // a token, stores its hash + expiry, and sends the email.
+                try {
+                  await axios.post("http://localhost:8000/auth/forgot-password", { email });
+                } catch {
+                  // still show the same neutral message either way
+                }
                 setSubmitted(true);
               }}
             >

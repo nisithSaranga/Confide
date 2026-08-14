@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import Toast from "../components/Toast";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   return (
   <main className="min-h-screen bg-white">
@@ -61,7 +63,8 @@ try {
     email,
     password,
   });
-  window.location.href = "/login";
+  setShowToast(true);
+setTimeout(() => { window.location.href = "/login"; }, 1200);
 } catch (err) {
   if (axios.isAxiosError(err) && err.response) {
     setPasswordError(err.response.data.detail || "Registration failed.");
@@ -143,6 +146,9 @@ try {
         </form>
       </div>
     </div>
+    {showToast && (
+  <Toast message="Registered successfully" onClose={() => setShowToast(false)} />
+)}
   </main>
 );
 }
