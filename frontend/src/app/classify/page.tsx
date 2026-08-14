@@ -1,16 +1,124 @@
 "use client";
+import { useState, useEffect } from "react";
+import * as tf from "@tensorflow/tfjs";
 import Image from "next/image";
 import Link from "next/link";
 
+const CLASS_NAMES = ["HPV", "HSV", "Syphilis"];
+const SKIN_THRESHOLD = 0.05;
+const CONFIDENCE_THRESHOLD = 0.60;
+
+type ResultState =
+  | { status: "loading-models" }
+  | { status: "ready" }
+  | { status: "classifying" }
+  | { status: "not-skin" }
+  | { status: "inconclusive"; confidence: number }
+  | { status: "result"; condition: string; confidence: number };
+
 export default function Classify() {
+  const [modelDeeper, setModelDeeper] = useState<tf.LayersModel | null>(null);
+  const [model35pct, setModel35pct] = useState<tf.LayersModel | null>(null);
+  const [modelSkin, setModelSkin] = useState<tf.LayersModel | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [state, setState] = useState<ResultState>({ status: "loading-models" });
+
+  useEffect(() => {
+    async function loadModels() {
+      const [deeper, m35, skin] = await Promise.all([
+        tf.loadLayersModel("/models/ensemble-deeper/model.json"),
+        tf.loadLayersModel("/models/ensemble-35pct/model.json"),
+        tf.loadLayersModel("/models/skin-detector/model.json"),
+      ]);
+      setModelDeeper(deeper);
+      setModel35pct(m35);
+      setModelSkin(skin);
+      setState({ status: "ready" });
+    }
+    loadModels();
+  }, []);
+
+  function preprocessResNet(img: HTMLImageElement): tf.Tensor {
+    return tf.tidy(() => {
+      const t = tf.browser.fromPixels(img).resizeBilinear([224, 224]).toFloat();
+      const [r, g, b] = tf.split(t, 3, -1);
+      const bgr = tf.concat([b, g, r], -1);
+      const mean = tf.tensor1d([103.939, 116.779, 123.68]);
+      return bgr.sub(mean).expandDims(0);
+    });
+  }
+
+  function preprocessMobileNet(img: HTMLImageElement): tf.Tensor {
+    return tf.tidy(() => {
+      const t = tf.browser.fromPixels(img).resizeBilinear([160, 160]).toFloat().div(255.0);
+      return t.mul(2).sub(1).expandDims(0);
+    });
+  }
+
+  async function handleFile(file: File) {
+    const url = URL.createObjectURL(file);
+    setImagePreview(url);
+    setState({ status: "classifying" });
+
+    const img = new window.Image();
+    img.src = url;
+    await new Promise((resolve) => { img.onload = resolve; });
+
+    if (!modelSkin || !modelDeeper || !model35pct) return;
+
+    const skinInput = preprocessMobileNet(img);
+    const skinPred = modelSkin.predict(skinInput) as tf.Tensor;
+    const skinScore = (await skinPred.data())[0];
+    skinInput.dispose();
+    skinPred.dispose();
+
+    if (skinScore < SKIN_THRESHOLD) {
+      setState({ status: "not-skin" });
+      return;
+    }
+
+    const resInput = preprocessResNet(img);
+    const raw1 = modelDeeper.predict(resInput) as tf.Tensor;
+    const raw2 = model35pct.predict(resInput) as tf.Tensor;
+    const probs1 = tf.softmax(raw1);
+    const probs2 = tf.softmax(raw2);
+    const avgProbs = probs1.add(probs2).div(2);
+    const probsArray = Array.from(await avgProbs.data());
+    resInput.dispose();
+    raw1.dispose();
+    raw2.dispose();
+    probs1.dispose();
+    probs2.dispose();
+    avgProbs.dispose();
+
+    const maxIdx = probsArray.indexOf(Math.max(...probsArray));
+    const confidence = probsArray[maxIdx];
+
+    if (confidence < CONFIDENCE_THRESHOLD) {
+      setState({ status: "inconclusive", confidence });
+    } else {
+      setState({ status: "result", condition: CLASS_NAMES[maxIdx], confidence });
+    }
+  }
+
+  function resetForNewImage() {
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+    setImagePreview(null);
+    setState({ status: "ready" });
+  }
+
+  const isTerminalState =
+    state.status === "not-skin" || state.status === "inconclusive" || state.status === "result";
+
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center gap-3">
-        <Link href="/">
-          <Image src="/logo.png" alt="Confide" width={100} height={100}/>
+      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
+        <Link href="/" className="flex items-center gap-3">
+        <Image src="/logo.png" alt="Confide" width={100} height={100} className="w-12 h-12 md:w-20 md:h-20" />          <div>
+            <div className="text-white font-bold text-lg leading-none">Confide - Confidential Medical Screening for Men</div>
+            {/*<div className="text-blue-200 text-xs hidden sm:block">Skin Screening</div>*/}
+          </div>
         </Link>
-        <span className="text-white font-bold">Confide - Confidential Medical Screening for Men</span>
-        
       </nav>
 
       <div className="max-w-lg mx-auto px-6 py-12">
@@ -18,23 +126,87 @@ export default function Classify() {
 
         <div className="bg-blue-50 rounded-xl p-4 mb-6">
           <p className="text-sm text-slate-700">
-            Confide checks for three conditions: <strong>HPV, HSV & Syphilis</strong>.
+            Confide checks for three conditions: <strong>HPV, HSV, and syphilis</strong>.
             Images outside this scope may produce unreliable results.
           </p>
         </div>
 
-        <div className="border-2 border-dashed border-slate-300 rounded-xl p-12 text-center mb-6 hover:border-[#0B4DA2] transition-colors cursor-pointer">
-          <div className="text-4xl mb-3">📷</div>
-          <p className="text-slate-600 text-sm">Tap to upload a photo</p>
-        </div>
+        {state.status === "loading-models" && (
+          <div className="text-center py-8 text-slate-500 text-sm">Loading models…</div>
+        )}
 
-        <button className="w-full h-14 rounded-full bg-[#FF2B34] text-white font-bold text-base uppercase tracking-wide shadow-lg hover:brightness-90 transition-all">
-          Submit
-        </button>
+        {(state.status === "ready" || state.status === "classifying") && (
+          <label className="block border-2 border-dashed border-slate-300 rounded-xl p-12 text-center mb-6 hover:border-[#0B4DA2] transition-colors cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => e.target.files && handleFile(e.target.files[0])}
+            />
+            <div className="text-4xl mb-3">📷</div>
+            <p className="text-slate-600 text-sm">
+              {state.status === "classifying" ? "Analyzing…" : "Tap to upload a photo"}
+            </p>
+          </label>
+        )}
 
-       {/*<Link href="/" className="block text-center text-[#0B4DA2] text-sm mt-6 hover:underline">
+        {imagePreview && (
+          <div className="relative mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={imagePreview} alt="Uploaded" className="w-full rounded-xl" />
+            {isTerminalState && (
+              <button
+                onClick={resetForNewImage}
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center text-slate-600 hover:bg-white text-lg leading-none"
+                aria-label="Remove image"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        )}
+
+        {state.status === "not-skin" && (
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
+            <p className="text-slate-700 text-sm">
+              This doesn&apos;t appear to be a photo of skin. Please upload a clear image of the affected area.
+            </p>
+          </div>
+        )}
+
+        {state.status === "inconclusive" && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center">
+            <p className="font-semibold text-amber-800 mb-1">Inconclusive</p>
+            <p className="text-amber-700 text-sm">
+              The image may fall outside the supported conditions, or may be unsuitable for reliable classification.
+            </p>
+          </div>
+        )}
+
+        {state.status === "result" && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-5 text-center">
+            <p className="font-semibold text-green-800 mb-1">{state.condition}</p>
+            <p className="text-green-700 text-sm mb-3">
+              {(state.confidence * 100).toFixed(0)}% confidence
+            </p>
+            <p className="text-xs text-slate-500">
+              This is a preliminary screening result, not a confirmed medical diagnosis.
+            </p>
+          </div>
+        )}
+
+        {isTerminalState && (
+          <button
+            onClick={resetForNewImage}
+            className="w-full h-12 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-semibold text-sm mt-4 hover:bg-blue-50 transition-colors"
+          >
+            Try another photo
+          </button>
+        )}
+
+        <Link href="/" className="block text-center text-[#0B4DA2] text-sm mt-6 hover:underline">
           ← Back to home
-        </Link>*/}
+        </Link>
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,22 @@ export default function Login() {
           Log In
         </h1>
 
-        <form className="space-y-6">
+        <form
+  className="space-y-6"
+ onSubmit={async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post("http://localhost:8000/auth/login", {
+      email,
+      password,
+    });
+    localStorage.setItem("token", res.data.token);
+    window.location.href = "/dashboard";
+  } catch (err) {
+    alert("Invalid email or password.");
+  }
+}}
+>
           <div>
             <label className="text-base text-slate-800 block mb-2">
               Email

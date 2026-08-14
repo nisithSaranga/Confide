@@ -2,12 +2,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   return (
   <main className="min-h-screen bg-white">
@@ -25,7 +27,50 @@ export default function Register() {
 
         <h1 className="text-4xl font-bold text-[#0A306D] mb-8">Register</h1>
 
-        <form className="space-y-6">
+        <form
+  className="space-y-6"
+  onSubmit={async (e) => {
+  e.preventDefault();
+
+  const hasMinLength = password.length >= 8;
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (!hasMinLength || !hasLetter || !hasNumber || !hasSymbol) {
+    setPasswordError(
+      "Password must be at least 8 characters & include a letter, a number & a special symbol."
+    );
+    return;
+  }
+
+  if (!accepted) {
+    setPasswordError("Please accept the Terms of Use and Privacy Policy to continue.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setPasswordError("Passwords don't match.");
+    return;
+  }
+
+  setPasswordError("");
+
+try {
+  await axios.post("http://localhost:8000/auth/register", {
+    email,
+    password,
+  });
+  window.location.href = "/login";
+} catch (err) {
+  if (axios.isAxiosError(err) && err.response) {
+    setPasswordError(err.response.data.detail || "Registration failed.");
+  } else {
+    setPasswordError("Something went wrong. Please try again.");
+  }
+}
+}}
+>
           <div>
             <label className="text-base text-slate-800 block mb-2">Email</label>
             <input
@@ -44,9 +89,15 @@ export default function Register() {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError("");
+              }}
               className="w-full h-14 px-4 border border-slate-300 rounded-md text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
             />
+            {passwordError && (
+              <p className="text-red-600 text-sm mt-2">{passwordError}</p>
+            )}
           </div>
 
           <div>
@@ -95,4 +146,3 @@ export default function Register() {
   </main>
 );
 }
-            
