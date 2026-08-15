@@ -110,11 +110,11 @@ function ResetPasswordForm() {
 export default function ResetPassword() {
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center">
         <Link href="/" className="flex items-center gap-3">
           <Image src="/logo.png" alt="Confide" width={100} height={100} />
           <div>
-            <div className="text-white font-bold text-lg leading-none">Confide - Confidential Medical Screening for Men</div>
+            <div className="text-white font-bold text-lg leading-none">Confide - Private STI Screening for Men</div>
             {/* <div className="text-blue-200 text-xs">Skin Screening</div>*/}
           </div>
         </Link>

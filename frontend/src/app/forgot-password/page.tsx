@@ -9,13 +9,22 @@ export default function ForgotPassword() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center gap-2 mb-10">
-          <Image src="/logo.png" alt="Confide" width={36} height={36} />
-          <span className="text-[#0A306D] font-bold text-lg">Confide</span>
+    <main className="min-h-screen bg-white">
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center gap-3 w-full">
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/logo.png"
+            alt="Confide"
+            width={100}
+            height={100}
+          />
+          <span className="text-white font-bold text-lg">
+            Confide - Private STI Screening for Men
+          </span>
         </Link>
+      </nav>
 
+      <div className="w-full max-w-md mx-auto px-6 py-12">
         {!submitted ? (
           <>
             <h1 className="text-4xl font-bold text-[#0A306D] mb-3">Reset password</h1>

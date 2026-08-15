@@ -23,8 +23,11 @@ export default function Classify() {
   const [modelSkin, setModelSkin] = useState<tf.LayersModel | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [state, setState] = useState<ResultState>({ status: "loading-models" });
-
-  useEffect(() => {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  if (typeof window === "undefined") return false;
+  return !!localStorage.getItem("token");
+  });
+  useEffect(() => { 
     async function loadModels() {
       const [deeper, m35, skin] = await Promise.all([
         tf.loadLayersModel("/models/ensemble-deeper/model.json"),
@@ -113,12 +116,19 @@ export default function Classify() {
 
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center gap-3">
-        <Link href="/">
-        <Image src="/logo.png" alt="Confide" width={100} height={100} />  
-        </Link>        
-            <span className="text-white font-bold text-lg">Confide - Confidential Medical Screening for Men</span>
-      </nav>
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center gap-3 w-full">
+      <Link href={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-3">
+        <Image
+          src="/logo.png"
+          alt="Confide"
+          width={100}
+          height={100}
+        />
+      <span className="text-white font-bold text-lg">
+        Confide - Private STI Screening for Men
+      </span>
+          </Link>
+    </nav>
 
       <div className="max-w-lg mx-auto px-6 py-12">
         <h1 className="text-2xl font-bold text-[#0A306D] mb-6">Let&apos;s check it</h1>
@@ -219,15 +229,11 @@ export default function Classify() {
         {isTerminalState && (
           <button
             onClick={resetForNewImage}
-            className="w-full h-12 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-semibold text-sm mt-4 hover:bg-blue-50 transition-colors"
+            className="w-full h-12 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-semibold text-sm mt-4 hover:bg-blue-50 transition-colors cursor-pointer"
           >
             Try another photo
           </button>
         )}
-
-        <Link href="/dashboard" className="block text-center text-[#0B4DA2] text-sm mt-6 hover:underline">
-          ← Back to home
-        </Link>
       </div>
     </main>
   );

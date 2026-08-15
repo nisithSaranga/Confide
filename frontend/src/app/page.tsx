@@ -5,15 +5,14 @@ import BackToTop from "./components/BackToTop";
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
-  <div className="flex items-center gap-3">
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center">
+  <div className="flex items-center gap-3 cursor-pointer">
     <Image src="/logo.png" alt="Confide" width={100} height={100} />
     <div>
-      <div className="text-white font-bold text-lg leading-none">Confide - Confidential Medical Screening for Men</div>
-      {/*<div className="text-blue-200 text-xs">Skin Screening</div>*/}
+      <div className="text-white font-bold text-lg leading-none cursor-pointer">Confide - Private STI Screening for Men</div>
     </div>
   </div>
-  <div className="flex items-center gap-6 ml-auto">
+  <div className="flex items-center px-6 gap-6 ml-auto">
     <Link href="/login" className="text-white text-sm hover:text-blue-200 transition-colors">Log in</Link>
     <Link href="/register" className="text-white text-sm font-medium border border-white/40 rounded-lg px-4 py-2 hover:bg-white/10 transition-colors">Register</Link>
   </div>
@@ -85,7 +84,7 @@ export default function Home() {
           </div>
 
           <Link href="/classify">
-            <button className="h-14 px-10 rounded-full bg-[#FF2B34] text-white font-bold text-base uppercase tracking-wide shadow-lg hover:brightness-90 transition-all">
+            <button className="h-14 px-10 rounded-full bg-[#FF2B34] text-white font-bold text-base uppercase tracking-wide shadow-lg hover:brightness-90 transition-all cursor-pointer">
               Get Instant Result
             </button>
           </Link>
@@ -95,7 +94,7 @@ export default function Home() {
         </div>
       </section>
       {/* Why Confide worth using */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
+      <section className="max-w-6xl mx-auto px-15 py-16">
         <h2 className="text-2xl font-bold text-[#0A306D] mb-10">Why is Confide worth using?</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-30">
           {[
@@ -150,7 +149,7 @@ export default function Home() {
       </section>
      
       {/* Informational section */}
-      <section className="max-w-5xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
+      <section className="max-w-5xl mx-auto px-1 py-6 grid md:grid-cols-2 gap-10 items-center">
         <div className="bg-blue-50 rounded-2xl p-8 flex items-center justify-center">
           <div className="relative w-56">
             <Image
@@ -171,7 +170,7 @@ export default function Home() {
         </div>
 
         <div>
-         <h2 className="text-xl sm:text-2xl font-bold text-[#102548] mb-4 whitespace-nowrap">
+         <h2 className="text-xl sm:text-2xl font-bold text-[#272b31] mb-4 whitespace-nowrap">
            Stay Informed About Your Anogenital Skin
          </h2>
           <p className="text-slate-600 text-sm mb-6 leading-relaxed">
@@ -200,7 +199,7 @@ export default function Home() {
       
 
       {/* How to use Confide */}
-      <section className="max-w-6xl mx-auto px-6 pt-6 pb-16 border-t border-slate-100">
+      <section className="max-w-6xl mx-auto px-16 pt-6 pb-16 border-t border-slate-100">
         <h2 className="text-2xl font-bold text-[#0A306D] mb-10">How to use Confide?</h2>
         <div className="grid md:grid-cols-3 gap-10">
           <div>
@@ -253,7 +252,7 @@ export default function Home() {
         {/*<p className="text-slate-400 text-xs mt-8">*This is a preliminary screening result, not a confirmed medical diagnosis.</p>*/}
       </section>
       {/* How Confide predicts your condition */}
-      <section className="max-w-6xl mx-auto px-6 pt-6 pb-16 border-t border-slate-100">
+      <section className="max-w-6xl mx-auto px-16 pt-6 pb-16 border-t border-slate-100">
         <h2 className="text-2xl font-bold text-[#040f20] mb-14">
           How does Confide analyze images?
         </h2>
@@ -310,10 +309,29 @@ export default function Home() {
               nisithsaranga13@gmail.com
             </Link>
           </p>
+          <div className="flex items-center justify-start gap-1">
+  <Link
+    href="https://github.com/nisithSaranga/Confide"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-blue-300 text-xs underline"
+  >
+    Confide
+  </Link>
 
-          <p className="text-blue-300 text-xs">
-            Confide | Developed by Nisith Saranga | © 2026
-          </p>
+  <span className="text-blue-300 text-xs"> | </span>
+
+  <Link
+    href="https://www.linkedin.com/in/nisith-saranga-0529732a5/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-blue-300 text-xs underline"
+  >
+    Developed by Nisith Saranga
+  </Link>
+
+  <span className="text-blue-300 text-xs"> © 2026</span>
+</div>
         </div>
       </footer>
 

@@ -15,11 +15,11 @@ export default function ChangePassword() {
 
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
-        <Link href="/" className="flex items-center gap-3 w-full">
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center">
+        <Link href="/dashboard" className="flex items-center gap-3 w-full">
         <Image src="/logo.png" alt="Confide" width={100} height={100} />
         <span className="text-white font-bold text-lg">
-          Confide - Confidential Medical Screening for Men
+          Confide - Private STI Screening for Men
         </span>
       </Link>
       </nav>
@@ -62,8 +62,8 @@ export default function ChangePassword() {
                   { current_password: currentPassword, new_password: newPassword },
                   { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setSuccess(true);
-                 setShowToast(true);
+                setShowToast(true);
+                setTimeout(() => { window.location.href = "/dashboard"; }, 1500);
               } catch (err) {
                 setError(axios.isAxiosError(err) ? err.response?.data?.detail || "Something went wrong." : "Something went wrong.");
               }
@@ -103,7 +103,7 @@ export default function ChangePassword() {
 
             <button
               type="submit"
-              className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all"
+              className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all cursor-pointer"
             >
               Change password
             </button>

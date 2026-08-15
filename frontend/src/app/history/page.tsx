@@ -47,11 +47,11 @@ export default function History() {
 
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
-        <Link href="/" className="flex items-center gap-3 w-full">
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center">
+        <Link href="/dashboard" className="flex items-center gap-3 w-full">
         <Image src="/logo.png" alt="Confide" width={100} height={100} />
         <span className="text-white font-bold text-lg">
-          Confide - Confidential Medical Screening for Men
+          Confide - Private STI Screening for Men
         </span>
       </Link>
       </nav>

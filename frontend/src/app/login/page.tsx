@@ -13,19 +13,18 @@ export default function Login() {
  return (
   <main className="min-h-screen bg-white">
 
-    <nav className="bg-[#0A306D] px-6 py-4 flex items-center gap-3 w-full">
-      <Link href="/">
+    <nav className="bg-[#0A306D] px-47 py-4 flex items-center gap-3 w-full">
+      <Link href="/" className="flex items-center gap-3">
         <Image
           src="/logo.png"
           alt="Confide"
           width={100}
           height={100}
         />
-      </Link>
-
       <span className="text-white font-bold text-lg">
-        Confide - Confidential Medical Screening for Men
+        Confide - Private STI Screening for Men
       </span>
+          </Link>
     </nav>
 
     <div className="min-h-[calc(100vh-88px)] flex items-center justify-center px-6 py-12">
@@ -87,7 +86,7 @@ setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
 
           <button
             type="submit"
-            className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all mt-4"
+            className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all mt-4 cursor-pointer"
           >
             Log In
           </button>
@@ -99,7 +98,7 @@ setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
           <Link href="/register">
             <button
               type="button"
-              className="w-full h-14 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-bold text-base hover:bg-blue-50 transition-colors"
+              className="w-full h-14 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-bold text-base hover:bg-blue-50 transition-colors cursor-pointer"
             >
               Register
             </button>
@@ -108,9 +107,9 @@ setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
 
       </div>
     </div>
-{showToast && (
-  <Toast message="Logged in successfully" onClose={() => setShowToast(false)} />
-)}
+   {showToast && (
+    <Toast message="Logged in successfully" onClose={() => setShowToast(false)} bottomOffset="110px" />
+   )}
   </main>
 );
 }

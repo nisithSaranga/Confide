@@ -4,13 +4,19 @@ import Link from "next/link";
 export default function Privacy() {
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center gap-3">
-        <Link href="/">
-          <Image src="/logo.png" alt="Confide" width={100} height={100}/>
-        </Link>
-        <span className="text-white font-bold text-lg">Confide - Confidential Medical Screening for Men</span>
-        
-      </nav>
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center gap-3 w-full">
+      <Link href="/" className="flex items-center gap-3">
+        <Image
+          src="/logo.png"
+          alt="Confide"
+          width={100}
+          height={100}
+        />
+      <span className="text-white font-bold text-lg">
+        Confide - Private STI Screening for Men
+      </span>
+          </Link>
+    </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
         <Link href="/" className="text-[#0B4DA2] text-sm hover:underline mb-6 inline-block">← Back</Link>
