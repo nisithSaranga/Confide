@@ -6,7 +6,7 @@ from models import UserRegister, UserLogin, ChangePassword, ForgotPasswordReques
 from result_model import SaveResult
 from auth_service import hash_password, verify_password, create_token, verify_token
 from email_service import send_reset_email
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from bson import ObjectId
 import secrets
 
@@ -53,7 +53,7 @@ async def register(user: UserRegister):
     result = await users_collection.insert_one({
         "email": user.email,
         "password_hash": hashed,
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
     })
     return {"message": "Registered successfully", "userId": str(result.inserted_id)}
 
@@ -68,7 +68,8 @@ async def login(credentials: UserLogin):
 
 @app.get("/auth/verify")
 async def verify(user_id: str = Depends(get_current_user)):
-    return {"userId": user_id}
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    return {"userId": user_id, "email": user["email"] if user else None}
 
 @app.post("/auth/change-password")
 async def change_password(data: ChangePassword, user_id: str = Depends(get_current_user)):
@@ -88,7 +89,7 @@ async def forgot_password(data: ForgotPasswordRequest):
     user = await users_collection.find_one({"email": data.email})
     if user:
         token = secrets.token_urlsafe(32)
-        expiry = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRY_MINUTES)
+        expiry = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRY_MINUTES)
         await users_collection.update_one(
             {"_id": user["_id"]},
             {"$set": {"reset_token": token, "reset_token_expiry": expiry}}
@@ -105,7 +106,7 @@ async def forgot_password(data: ForgotPasswordRequest):
 @app.post("/auth/reset-password")
 async def reset_password(data: ResetPasswordRequest):
     user = await users_collection.find_one({"reset_token": data.token})
-    if not user or user.get("reset_token_expiry") < datetime.utcnow():
+    if not user or user.get("reset_token_expiry") < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="This reset link is invalid or has expired.")
 
     new_hash = hash_password(data.new_password)
@@ -121,7 +122,7 @@ async def save_result(result: SaveResult, user_id: str = Depends(get_current_use
         "user_id": user_id,
         "predicted_condition": result.condition,
         "confidence_score": result.confidence,
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
     })
     return {"message": "Result saved"}
 
@@ -130,4 +131,6 @@ async def get_history(user_id: str = Depends(get_current_user)):
     results = await results_collection.find({"user_id": user_id}).sort("created_at", -1).to_list(100)
     for r in results:
         r["_id"] = str(r["_id"])
+        if r.get("created_at") and r["created_at"].tzinfo is None:
+            r["created_at"] = r["created_at"].replace(tzinfo=timezone.utc)
     return {"results": results}

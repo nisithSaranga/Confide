@@ -101,23 +101,31 @@ function ResetPasswordForm() {
         </form>
       )}
       {showToast && (
-  <Toast message="Password reset successfully" onClose={() => setShowToast(false)} />
-)}
+        <Toast message="Password reset successfully" onClose={() => setShowToast(false)} />
+      )}
     </>
   );
 }
 
 export default function ResetPassword() {
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center gap-2 mb-10">
-          <Image src="/logo.png" alt="Confide" width={36} height={36} />
-          <span className="text-[#0A306D] font-bold text-lg">Confide</span>
+    <main className="min-h-screen bg-white">
+      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
+        <Link href="/" className="flex items-center gap-3">
+          <Image src="/logo.png" alt="Confide" width={100} height={100} />
+          <div>
+            <div className="text-white font-bold text-lg leading-none">Confide - Confidential Medical Screening for Men</div>
+            {/* <div className="text-blue-200 text-xs">Skin Screening</div>*/}
+          </div>
         </Link>
-        <Suspense fallback={<p className="text-slate-400 text-sm">Loading…</p>}>
-          <ResetPasswordForm />
-        </Suspense>
+      </nav>
+
+      <div className="flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          <Suspense fallback={<p className="text-slate-400 text-sm">Loading…</p>}>
+            <ResetPasswordForm />
+          </Suspense>
+        </div>
       </div>
     </main>
   );

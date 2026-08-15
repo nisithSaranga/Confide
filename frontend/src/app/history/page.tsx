@@ -38,22 +38,22 @@ export default function History() {
   }, []);
 
   function formatDate(iso: string) {
-    return new Date(iso).toLocaleDateString(undefined, {
-      year: "numeric", month: "short", day: "numeric",
-      hour: "2-digit", minute: "2-digit",
-    });
-  }
+  return new Date(iso).toLocaleDateString("en-US", {
+    year: "numeric", month: "short", day: "numeric",
+    hour: "2-digit", minute: "2-digit",
+    timeZone: "Asia/Colombo",
+  });
+}
 
   return (
     <main className="min-h-screen bg-white">
       <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
-        <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Confide" width={100} height={100} className="w-12 h-12 md:w-20 md:h-20" />
-          <div>
-            <div className="text-white font-bold text-lg leading-none">Confide</div>
-            <div className="text-blue-200 text-xs hidden sm:block">Skin Screening</div>
-          </div>
-        </Link>
+        <Link href="/" className="flex items-center gap-3 w-full">
+        <Image src="/logo.png" alt="Confide" width={100} height={100} />
+        <span className="text-white font-bold text-lg">
+          Confide - Confidential Medical Screening for Men
+        </span>
+      </Link>
       </nav>
 
       <div className="max-w-lg mx-auto px-6 py-12">

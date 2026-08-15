@@ -23,7 +23,7 @@ export default function Login() {
         />
       </Link>
 
-      <span className="text-white font-bold">
+      <span className="text-white font-bold text-lg">
         Confide - Confidential Medical Screening for Men
       </span>
     </nav>

@@ -8,7 +8,7 @@ export default function Privacy() {
         <Link href="/">
           <Image src="/logo.png" alt="Confide" width={100} height={100}/>
         </Link>
-        <span className="text-white font-bold">Confide - Confidential Medical Screening for Men</span>
+        <span className="text-white font-bold text-lg">Confide - Confidential Medical Screening for Men</span>
         
       </nav>
 

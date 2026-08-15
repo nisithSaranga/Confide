@@ -113,13 +113,11 @@ export default function Classify() {
 
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-6 py-4 flex items-center">
-        <Link href="/" className="flex items-center gap-3">
-        <Image src="/logo.png" alt="Confide" width={100} height={100} className="w-12 h-12 md:w-20 md:h-20" />          <div>
-            <div className="text-white font-bold text-lg leading-none">Confide - Confidential Medical Screening for Men</div>
-            {/*<div className="text-blue-200 text-xs hidden sm:block">Skin Screening</div>*/}
-          </div>
-        </Link>
+      <nav className="bg-[#0A306D] px-6 py-4 flex items-center gap-3">
+        <Link href="/">
+        <Image src="/logo.png" alt="Confide" width={100} height={100} />  
+        </Link>        
+            <span className="text-white font-bold text-lg">Confide - Confidential Medical Screening for Men</span>
       </nav>
 
       <div className="max-w-lg mx-auto px-6 py-12">
@@ -127,7 +125,7 @@ export default function Classify() {
 
         <div className="bg-blue-50 rounded-xl p-4 mb-6">
           <p className="text-sm text-slate-700">
-            Confide checks for three conditions: <strong>HPV, HSV, and syphilis</strong>.
+            Confide checks for three conditions: <strong>HPV, HSV & Syphilis</strong>.
             Images outside this scope may produce unreliable results.
           </p>
         </div>
@@ -227,7 +225,7 @@ export default function Classify() {
           </button>
         )}
 
-        <Link href="/" className="block text-center text-[#0B4DA2] text-sm mt-6 hover:underline">
+        <Link href="/dashboard" className="block text-center text-[#0B4DA2] text-sm mt-6 hover:underline">
           ← Back to home
         </Link>
       </div>
