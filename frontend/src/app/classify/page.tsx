@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 import { getModels } from "../lib/modelSingleton";
+import { CONDITION_INFO } from "../lib/conditionInfo";
 
 const CLASS_NAMES = ["HPV", "HSV", "Syphilis"];
 const SKIN_THRESHOLD = 0.05;
@@ -190,14 +191,17 @@ export default function Classify() {
         )}
 
         {state.status === "result" && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-5 text-center">
-            <p className="font-semibold text-green-800 mb-1">{state.condition}</p>
-            <p className="text-green-700 text-sm mb-3">
-              {(state.confidence * 100).toFixed(0)}% confidence
+         <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 text-center">
+         <p className="font-semibold text-[#0A306D] mb-1">{state.condition}</p>
+         <p className="text-[#0B4DA2] text-sm mb-3">
+              {(state.confidence * 100).toFixed(1)}% confidence
             </p>
-            <p className="text-xs text-slate-500">
-              This is a preliminary screening result, not a confirmed medical diagnosis.
+            <p className="text-sm font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3">
+               ⚠️ This is a preliminary screening result, not a confirmed medical diagnosis.
             </p>
+            <p className="text-sm text-slate-700 mt-4 text-left leading-relaxed">
+              {CONDITION_INFO[state.condition]}
+           </p>
             <button
   onClick={async () => {
     const token = localStorage.getItem("token");
@@ -216,7 +220,7 @@ export default function Classify() {
       alert("Failed to save result.");
     }
   }}
-  className="mt-3 text-xs text-green-700 underline hover:text-green-900"
+  className="mt-3 text-xs text-green-700 underline hover:text-green-900 cursor-pointer"
 >
   Save this result
 </button>
