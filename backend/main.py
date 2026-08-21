@@ -1,13 +1,13 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from database import db, users_collection, results_collection
+from database import db
+from repositories import user_repository, result_repository
 from models import UserRegister, UserLogin, ChangePassword, ForgotPasswordRequest, ResetPasswordRequest
 from result_model import SaveResult
 from auth_service import hash_password, verify_password, create_token, verify_token
 from email_service import send_reset_email
 from datetime import datetime, timedelta, timezone
-from bson import ObjectId
 import secrets
 
 app = FastAPI(title="Confide API")
@@ -45,21 +45,17 @@ async def check_db():
 
 @app.post("/auth/register")
 async def register(user: UserRegister):
-    existing = await users_collection.find_one({"email": user.email})
+    existing = await user_repository.find_by_email(user.email)
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed = hash_password(user.password)
-    result = await users_collection.insert_one({
-        "email": user.email,
-        "password_hash": hashed,
-        "created_at": datetime.now(timezone.utc),
-    })
-    return {"message": "Registered successfully", "userId": str(result.inserted_id)}
+    new_user_id = await user_repository.create(user.email, hashed)
+    return {"message": "Registered successfully", "userId": new_user_id}
 
 @app.post("/auth/login")
 async def login(credentials: UserLogin):
-    user = await users_collection.find_one({"email": credentials.email})
+    user = await user_repository.find_by_email(credentials.email)
     if not user or not verify_password(credentials.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
@@ -68,32 +64,26 @@ async def login(credentials: UserLogin):
 
 @app.get("/auth/verify")
 async def verify(user_id: str = Depends(get_current_user)):
-    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    user = await user_repository.find_by_id(user_id)
     return {"userId": user_id, "email": user["email"] if user else None}
 
 @app.post("/auth/change-password")
 async def change_password(data: ChangePassword, user_id: str = Depends(get_current_user)):
-    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    user = await user_repository.find_by_id(user_id)
     if not user or not verify_password(data.current_password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Current password is incorrect")
 
     new_hash = hash_password(data.new_password)
-    await users_collection.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": {"password_hash": new_hash}}
-    )
+    await user_repository.update_password(user_id, new_hash)
     return {"message": "Password changed successfully"}
 
 @app.post("/auth/forgot-password")
 async def forgot_password(data: ForgotPasswordRequest):
-    user = await users_collection.find_one({"email": data.email})
+    user = await user_repository.find_by_email(data.email)
     if user:
         token = secrets.token_urlsafe(32)
         expiry = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRY_MINUTES)
-        await users_collection.update_one(
-            {"_id": user["_id"]},
-            {"$set": {"reset_token": token, "reset_token_expiry": expiry}}
-        )
+        await user_repository.set_reset_token(user["_id"], token, expiry)
         try:
             send_reset_email(data.email, token)
         except Exception as e:
@@ -105,32 +95,20 @@ async def forgot_password(data: ForgotPasswordRequest):
 
 @app.post("/auth/reset-password")
 async def reset_password(data: ResetPasswordRequest):
-    user = await users_collection.find_one({"reset_token": data.token})
+    user = await user_repository.find_by_reset_token(data.token)
     if not user or user.get("reset_token_expiry") < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="This reset link is invalid or has expired.")
 
     new_hash = hash_password(data.new_password)
-    await users_collection.update_one(
-        {"_id": user["_id"]},
-        {"$set": {"password_hash": new_hash}, "$unset": {"reset_token": "", "reset_token_expiry": ""}}
-    )
+    await user_repository.reset_password_with_token(user["_id"], new_hash)
     return {"message": "Password reset successfully"}
 
 @app.post("/results/save")
 async def save_result(result: SaveResult, user_id: str = Depends(get_current_user)):
-    await results_collection.insert_one({
-        "user_id": user_id,
-        "predicted_condition": result.condition,
-        "confidence_score": result.confidence,
-        "created_at": datetime.now(timezone.utc),
-    })
+    await result_repository.create(user_id, result.condition, result.confidence)
     return {"message": "Result saved"}
 
 @app.get("/results/history")
 async def get_history(user_id: str = Depends(get_current_user)):
-    results = await results_collection.find({"user_id": user_id}).sort("created_at", -1).to_list(100)
-    for r in results:
-        r["_id"] = str(r["_id"])
-        if r.get("created_at") and r["created_at"].tzinfo is None:
-            r["created_at"] = r["created_at"].replace(tzinfo=timezone.utc)
+    results = await result_repository.find_by_user(user_id)
     return {"results": results}
