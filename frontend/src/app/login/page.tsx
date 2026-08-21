@@ -9,6 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [error, setError] = useState("");
 
  return (
   <main className="min-h-screen bg-white">
@@ -45,10 +46,10 @@ export default function Login() {
     });
     localStorage.setItem("token", res.data.token);
     setShowToast(true);
-setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
-  } catch (err) {
-    alert("Invalid email or password.");
-  }
+    setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
+      } catch (err) {
+    setError("Invalid email or password."); 
+      }  
 }}
 >
           <div>
@@ -59,7 +60,10 @@ setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError("");
+              }}
               className="w-full h-14 px-4 border border-slate-300 rounded-md text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
             />
           </div>
@@ -72,9 +76,13 @@ setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError("");
+              }}
               className="w-full h-14 px-4 border border-slate-300 rounded-md text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
             />
+            {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
           </div>
 
           <Link
