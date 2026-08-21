@@ -57,18 +57,19 @@ export default function ForgotPassword() {
 
               <button
                 type="submit"
-                className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all"
+                className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all cursor-pointer"
               >
                 Send reset link
               </button>
             </form>
           </>
         ) : (
-          <div className="bg-blue-50 rounded-xl p-6 text-center">
-            <p className="text-slate-700 text-sm">
-              If an account exists for that email, a reset link has been sent.
-            </p>
-          </div>
+          <div className="bg-blue-50 rounded-xl p-6 text-center mt-[20px]">
+  <p className="text-slate-700 text-sm">
+    If an account exists for that email, a reset link has been sent.
+  </p>
+</div>
+
         )}
 
         <Link href="/login" className="block text-center text-[#0B4DA2] text-sm mt-6 hover:underline">

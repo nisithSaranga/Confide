@@ -94,7 +94,7 @@ function ResetPasswordForm() {
 
           <button
             type="submit"
-            className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all"
+            className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all cursor-pointer"
           >
             Reset password
           </button>
@@ -111,13 +111,12 @@ export default function ResetPassword() {
   return (
     <main className="min-h-screen bg-white">
       <nav className="bg-[#0A306D] px-47 py-4 flex items-center">
-        <Link href="/" className="flex items-center gap-3">
+        <div className="flex items-center gap-3 cursor-pointer">
           <Image src="/logo.png" alt="Confide" width={100} height={100} />
           <div>
             <div className="text-white font-bold text-lg leading-none">Confide - Private STI Screening for Men</div>
-            {/* <div className="text-blue-200 text-xs">Skin Screening</div>*/}
           </div>
-        </Link>
+        </div>
       </nav>
 
       <div className="flex items-center justify-center px-6 py-12">

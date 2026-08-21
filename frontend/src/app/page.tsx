@@ -13,9 +13,19 @@ export default function Home() {
     </div>
   </div>
   <div className="flex items-center px-6 gap-6 ml-auto">
-    <Link href="/login" className="text-white text-sm hover:text-blue-200 transition-colors">Log in</Link>
-    <Link href="/register" className="text-white text-sm font-medium border border-white/40 rounded-lg px-4 py-2 hover:bg-white/10 transition-colors">Register</Link>
-  </div>
+      <Link 
+        href="/login" 
+        className="text-white text-sm font-medium border border-transparent rounded-lg px-4 py-2 hover:border-white/40 hover:bg-white/10 transition-all duration-300"
+      >
+        Log in
+      </Link>
+      <Link 
+        href="/register" 
+        className="text-white text-sm font-medium border border-transparent rounded-lg px-4 py-2 hover:border-white/40 hover:bg-white/10 transition-all duration-300"
+      >
+        Register
+      </Link>
+    </div>
 </nav>
 
       <section className="relative overflow-hidden" style={{ backgroundColor: "#051A3D" }}>
@@ -210,9 +220,9 @@ export default function Home() {
               </svg>
               <span className="absolute top-2 right-0 bg-[#3665a3] text-white text-[10px] px-2 py-1 rounded-lg">Get close &amp; clear</span>
             </div>
-            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Frame the area</h3>
+            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Capture a photo</h3>
             <p className="text-slate-600 text-xs leading-relaxed">
-              Get close enough that the area fills the frame, in good light, without hair or clothing in the way and upload.
+              Get close enough that the area fills the frame, in good light, without hair or clothing in the way
             </p>
           </div>
 
@@ -225,9 +235,9 @@ export default function Home() {
               </svg>
               <span className="absolute top-2 right-0 bg-[#3665a3] text-white text-[10px] px-2 py-1 rounded-lg">Stays on your device</span>
             </div>
-            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Analyzed on-device</h3>
+            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Submit privately</h3>
             <p className="text-slate-600 text-xs leading-relaxed">
-              The photo is analyzed right there on your phone or computer. it never leaves your device.
+              Your photo stays on your device throughout,nothing is uploaded or transmitted to anywhere.
             </p>
           </div>
 
@@ -243,9 +253,9 @@ export default function Home() {
               </svg>
               <span className="absolute top-2 right-0 bg-[#3665a3] text-white text-[10px] px-2 py-1 rounded-lg">Save result</span>
             </div>
-            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Get your result</h3>
+            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Receive your result</h3>
             <p className="text-slate-600 text-xs leading-relaxed">
-              See a result or an honest inconclusive flag right away. Save it later if you register.
+              Get the result within 5 seconds and related guidance on the next steps to take.
             </p>
           </div>
         </div>

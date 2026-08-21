@@ -97,7 +97,7 @@ export default function Dashboard() {
               localStorage.removeItem("token");
               window.location.href = "/login";
             }}
-            className="border border-white/60 rounded-b-lg px-2.5 py-1 text-white text-xs cursor-pointer"
+            className="text-white text-sm font-medium border border-transparent rounded-lg px-4 py-2 hover:border-white/40 hover:bg-white/10 transition-all duration-300 cursor-pointer"
           >
             Log out
           </button>
@@ -108,7 +108,7 @@ export default function Dashboard() {
         <Link
           href="/classify"
           style={{ animation: "float-in 0.5s ease-out forwards", animationDelay: "0s", opacity: 0 }}
-          className="bg-blue-50 border-2 border-blue-900 rounded-xl p-10 block transition-all duration-200 hover:scale-105 hover:shadow-md"
+          className="bg-blue-50 border-2 border-blue-100 rounded-xl p-10 block transition-all duration-200 hover:scale-105 hover:shadow-md"
         >
           <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center mb-2">
             <span className="text-red-600 text-lg">📷</span>
@@ -120,7 +120,7 @@ export default function Dashboard() {
         <Link
           href="/history"
           style={{ animation: "float-in 0.5s ease-out forwards", animationDelay: "0.1s", opacity: 0 }}
-          className="bg-blue-50 border-2 border-blue-900 rounded-xl p-10 block transition-all duration-200 hover:scale-105 hover:shadow-md"
+          className="bg-blue-50 border-2 border-blue-100 rounded-xl p-10 block transition-all duration-200 hover:scale-105 hover:shadow-md"
         >
           <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center mb-2">
             <span className="text-emerald-700 text-lg">🕘</span>
@@ -132,7 +132,7 @@ export default function Dashboard() {
         <Link
           href="/change-password"
           style={{ animation: "float-in 0.5s ease-out forwards", animationDelay: "0.2s", opacity: 0 }}
-          className="bg-blue-50 border-2 border-blue-900 rounded-xl p-10 block transition-all duration-200 hover:scale-105 hover:shadow-md"        >
+          className="bg-blue-50 border-2 border-blue-100 rounded-xl p-10 block transition-all duration-200 hover:scale-105 hover:shadow-md"        >
           <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center mb-2">
             <span className="text-slate-500 text-lg">🔒</span>
           </div>
@@ -142,7 +142,7 @@ export default function Dashboard() {
 
         <div
           style={{ animation: "float-in 0.5s ease-out forwards", animationDelay: "0.3s", opacity: 0 }}
-          className="bg-blue-50 border-2 border-blue-900 rounded-xl p-10 transition-all duration-200 hover:scale-105 hover:shadow-md"
+          className="bg-blue-50 border-2 border-blue-100 rounded-xl p-10 transition-all duration-200 hover:scale-105 hover:shadow-md"
         >
           <div className="w-8 h-8 rounded-lg bg-white/60 flex items-center justify-center mb-2">
             <span className="text-blue-700 text-lg">🕐</span>
@@ -150,10 +150,10 @@ export default function Dashboard() {
           {recent ? (
             <>
               <p className="text-xs text-blue-700 m-0 mb-0.5 cursor-pointer">Most recent</p>
-              <p className="text-sm font-medium text-slate-900 m-0 mb-0.5">
+              <p className="text-sm font-medium text-slate-900 m-0 mb-0.5 cursor-pointer">
                 {recent.predicted_condition} — {(recent.confidence_score * 100).toFixed(0)}%
               </p>
-              <p className="text-xs text-slate-500 m-0">{getRelativeTime(recent.created_at)}</p>
+              <p className="text-xs text-slate-500 m-0 cursor-pointer">{getRelativeTime(recent.created_at)}</p>
             </>
           ) : (
             <>
