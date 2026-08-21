@@ -4,6 +4,7 @@ import * as tf from "@tensorflow/tfjs";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import { getModels } from "../lib/modelSingleton";
 
 const CLASS_NAMES = ["HPV", "HSV", "Syphilis"];
 const SKIN_THRESHOLD = 0.05;
@@ -27,20 +28,16 @@ export default function Classify() {
   if (typeof window === "undefined") return false;
   return !!localStorage.getItem("token");
   });
-  useEffect(() => { 
-    async function loadModels() {
-      const [deeper, m35, skin] = await Promise.all([
-        tf.loadLayersModel("/models/ensemble-deeper/model.json"),
-        tf.loadLayersModel("/models/ensemble-35pct/model.json"),
-        tf.loadLayersModel("/models/skin-detector/model.json"),
-      ]);
-      setModelDeeper(deeper);
-      setModel35pct(m35);
-      setModelSkin(skin);
-      setState({ status: "ready" });
-    }
-    loadModels();
-  }, []);
+ useEffect(() => {
+  async function loadModels() {
+    const { modelDeeper, model35pct, modelSkin } = await getModels();
+    setModelDeeper(modelDeeper);
+    setModel35pct(model35pct);
+    setModelSkin(modelSkin);
+    setState({ status: "ready" });
+  }
+  loadModels();
+}, []);
 
   function preprocessResNet(img: HTMLImageElement): tf.Tensor {
     return tf.tidy(() => {
