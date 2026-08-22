@@ -82,8 +82,9 @@ async def forgot_password(data: ForgotPasswordRequest):
     user = await user_repository.find_by_email(data.email)
     if user:
         token = secrets.token_urlsafe(32)
+        token_hash = hash_password(token)
         expiry = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRY_MINUTES)
-        await user_repository.set_reset_token(user["_id"], token, expiry)
+        await user_repository.set_reset_token(user["_id"], token_hash, expiry)
         try:
             send_reset_email(data.email, token)
         except Exception as e:
@@ -95,8 +96,8 @@ async def forgot_password(data: ForgotPasswordRequest):
 
 @app.post("/auth/reset-password")
 async def reset_password(data: ResetPasswordRequest):
-    user = await user_repository.find_by_reset_token(data.token)
-    if not user or user.get("reset_token_expiry") < datetime.now(timezone.utc):
+    user = await user_repository.find_by_valid_reset_token(data.token)
+    if not user:
         raise HTTPException(status_code=400, detail="This reset link is invalid or has expired.")
 
     new_hash = hash_password(data.new_password)

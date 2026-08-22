@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from bson import ObjectId
 from database import users_collection, results_collection
+from auth_service import verify_password
 
 
 class UserRepository:
@@ -14,11 +15,15 @@ class UserRepository:
     async def find_by_id(self, user_id: str):
         return await users_collection.find_one({"_id": ObjectId(user_id)})
 
-    async def find_by_reset_token(self, token: str):
-        user = await users_collection.find_one({"reset_token": token})
-        if user and user.get("reset_token_expiry") and user["reset_token_expiry"].tzinfo is None:
-            user["reset_token_expiry"] = user["reset_token_expiry"].replace(tzinfo=timezone.utc)
-        return user
+    async def find_by_valid_reset_token(self, token: str):
+        now = datetime.now(timezone.utc)
+        candidates = users_collection.find({"reset_token_expiry": {"$gt": now}})
+        async for user in candidates:
+            if user.get("reset_token_hash") and verify_password(token, user["reset_token_hash"]):
+                if user["reset_token_expiry"].tzinfo is None:
+                    user["reset_token_expiry"] = user["reset_token_expiry"].replace(tzinfo=timezone.utc)
+                return user
+        return None
 
     async def create(self, email: str, password_hash: str) -> str:
         result = await users_collection.insert_one({
@@ -34,17 +39,17 @@ class UserRepository:
             {"$set": {"password_hash": new_password_hash}}
         )
 
-    async def set_reset_token(self, user_id, token: str, expiry):
+    async def set_reset_token(self, user_id, token_hash: str, expiry):
         await users_collection.update_one(
             {"_id": user_id},
-            {"$set": {"reset_token": token, "reset_token_expiry": expiry}}
+            {"$set": {"reset_token_hash": token_hash, "reset_token_expiry": expiry}}
         )
 
     async def reset_password_with_token(self, user_id, new_password_hash: str):
         await users_collection.update_one(
             {"_id": user_id},
             {"$set": {"password_hash": new_password_hash},
-             "$unset": {"reset_token": "", "reset_token_expiry": ""}}
+             "$unset": {"reset_token_hash": "", "reset_token_expiry": ""}}
         )
 
 
