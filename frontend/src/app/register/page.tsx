@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 import Toast from "../components/Toast";
+import { AuthApiClient, getErrorMessage } from "../lib/authApiClient";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ export default function Register() {
 
         <form
   className="space-y-6"
-  onSubmit={async (e) => {
+onSubmit={async (e) => {
   e.preventDefault();
 
   const hasMinLength = password.length >= 8;
@@ -58,20 +58,13 @@ export default function Register() {
 
   setPasswordError("");
 
-try {
-  await axios.post("http://localhost:8000/auth/register", {
-    email,
-    password,
-  });
-  setShowToast(true);
-setTimeout(() => { window.location.href = "/login"; }, 1200);
-} catch (err) {
-  if (axios.isAxiosError(err) && err.response) {
-    setPasswordError(err.response.data.detail || "Registration failed.");
-  } else {
-    setPasswordError("Something went wrong. Please try again.");
+  try {
+    await AuthApiClient.register(email, password);
+    setShowToast(true);
+    setTimeout(() => { window.location.href = "/login"; }, 1200);
+  } catch (err) {
+    setPasswordError(getErrorMessage(err, "Registration failed."));
   }
-}
 }}
 >
           <div>
@@ -128,7 +121,7 @@ setTimeout(() => { window.location.href = "/login"; }, 1200);
             </span>
           </label>
 
-          <button
+           <button
             type="submit"
             className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all mt-4 cursor-pointer"
           >

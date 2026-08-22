@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 import Toast from "../components/Toast";
+import { AuthApiClient } from "../lib/authApiClient";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -37,13 +37,10 @@ export default function Login() {
 
         <form
   className="space-y-6"
- onSubmit={async (e) => {
+  onSubmit={async (e) => {
   e.preventDefault();
   try {
-    const res = await axios.post("http://localhost:8000/auth/login", {
-      email,
-      password,
-    });
+    const res = await AuthApiClient.login(email, password);
     localStorage.setItem("token", res.data.token);
     setShowToast(true);
     setTimeout(() => { window.location.href = "/dashboard"; }, 1200);

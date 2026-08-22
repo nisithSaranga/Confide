@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { ResultApiClient } from "../lib/resultApiClient";
 
 interface Result {
   _id: string;
@@ -24,9 +24,7 @@ export default function History() {
         return;
       }
       try {
-        const res = await axios.get("http://localhost:8000/results/history", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await ResultApiClient.getHistory(token);
         setResults(res.data.results);
         setChecking(false);
       } catch {
@@ -84,7 +82,7 @@ export default function History() {
                   <p className="text-slate-400 text-xs mt-1">{formatDate(r.created_at)}</p>
                 </div>
                 <span className="text-sm font-medium text-slate-600">
-                  {(r.confidence_score * 100).toFixed(0)}%
+                  {(r.confidence_score * 100).toFixed(1)}%
                 </span>
               </div>
             ))}

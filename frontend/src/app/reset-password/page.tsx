@@ -1,10 +1,10 @@
 "use client";
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import Toast from "../components/Toast";
+import { AuthApiClient, getErrorMessage } from "../lib/authApiClient";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -57,16 +57,11 @@ function ResetPasswordForm() {
             }
 
             try {
-              await axios.post("http://localhost:8000/auth/reset-password", {
-                token,
-                new_password: newPassword,
-              });
+              await AuthApiClient.resetPassword(token, newPassword);
               setSuccess(true);
               setShowToast(true);
             } catch (err) {
-              setError(
-                axios.isAxiosError(err) ? err.response?.data?.detail || "Something went wrong." : "Something went wrong."
-              );
+              setError(getErrorMessage(err, "Something went wrong."));
             }
           }}
         >

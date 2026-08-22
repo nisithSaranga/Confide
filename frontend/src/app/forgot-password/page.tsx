@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { AuthApiClient } from "../lib/authApiClient";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -37,7 +37,7 @@ export default function ForgotPassword() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 try {
-                  await axios.post("http://localhost:8000/auth/forgot-password", { email });
+                  await AuthApiClient.requestPasswordReset(email);
                 } catch {
                   // still show the same neutral message either way
                 }

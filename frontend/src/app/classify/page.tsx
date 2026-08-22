@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 import { getModels } from "../lib/modelSingleton";
 import { CONDITION_INFO } from "../lib/conditionInfo";
+import { ResultApiClient } from "../lib/resultApiClient";
+import Toast from "../components/Toast";
 
 const CLASS_NAMES = ["HPV", "HSV", "Syphilis"];
 const SKIN_THRESHOLD = 0.05;
@@ -29,6 +30,9 @@ export default function Classify() {
   if (typeof window === "undefined") return false;
   return !!localStorage.getItem("token");
   });
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  
  useEffect(() => {
   async function loadModels() {
     const { modelDeeper, model35pct, modelSkin } = await getModels();
@@ -204,26 +208,23 @@ export default function Classify() {
            </p>
             <button
   onClick={async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Log in to save results.");
-      return;
-    }
-    try {
-      await axios.post(
-        "http://localhost:8000/results/save",
-        { condition: state.condition, confidence: state.confidence },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert("Result saved.");
-    } catch {
-      alert("Failed to save result.");
-    }
-  }}
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setSaveError("Log in to save results.");
+    return;
+  }
+  try {
+    await ResultApiClient.saveResult(token, state.condition, state.confidence);
+    setShowSaveToast(true);
+  } catch {
+    setSaveError("Failed to save result.");
+  }
+}}
   className="mt-3 text-xs text-green-700 underline hover:text-green-900 cursor-pointer"
 >
   Save this result
 </button>
+{saveError && <p className="text-red-600 text-xs mt-2">{saveError}</p>}
           </div>
         )}
 
@@ -236,6 +237,9 @@ export default function Classify() {
           </button>
         )}
       </div>
+      {showSaveToast && (
+  <Toast message="Result saved" onClose={() => setShowSaveToast(false)} />
+  )}
     </main>
   );
 }

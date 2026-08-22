@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import Toast from "../components/Toast";
+import { AuthApiClient, getErrorMessage } from "../lib/authApiClient";
 
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -57,17 +57,12 @@ export default function ChangePassword() {
 
               const token = localStorage.getItem("token");
               try {
-                await axios.post(
-                  "http://localhost:8000/auth/change-password",
-                  { current_password: currentPassword, new_password: newPassword },
-                  { headers: { Authorization: `Bearer ${token}` } }
-                );
+                await AuthApiClient.changePassword(token!, currentPassword, newPassword);
                 setShowToast(true);
                 setTimeout(() => { window.location.href = "/dashboard"; }, 1500);
               } catch (err) {
-                setError(axios.isAxiosError(err) ? err.response?.data?.detail || "Something went wrong." : "Something went wrong.");
-              }
-            }}
+                setError(getErrorMessage(err, "Something went wrong."));
+            }}}
           >
             <div>
               <label className="text-base text-slate-800 block mb-2">Current password</label>

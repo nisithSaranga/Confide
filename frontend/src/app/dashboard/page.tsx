@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
+import { AuthApiClient } from "../lib/authApiClient";
+import { ResultApiClient } from "../lib/resultApiClient";
 
 interface RecentResult {
   predicted_condition: string;
@@ -39,14 +40,10 @@ export default function Dashboard() {
         return;
       }
       try {
-        const verifyRes = await axios.get("http://localhost:8000/auth/verify", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const verifyRes = await AuthApiClient.verify(token);
         setEmail(verifyRes.data.email || "");
 
-        const historyRes = await axios.get("http://localhost:8000/results/history", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const historyRes = await ResultApiClient.getHistory(token);
         if (historyRes.data.results.length > 0) {
           setRecent(historyRes.data.results[0]);
         }
@@ -151,7 +148,7 @@ export default function Dashboard() {
             <>
               <p className="text-xs text-blue-700 m-0 mb-0.5 cursor-pointer">Most recent</p>
               <p className="text-sm font-medium text-slate-900 m-0 mb-0.5 cursor-pointer">
-                {recent.predicted_condition} — {(recent.confidence_score * 100).toFixed(0)}%
+                {recent.predicted_condition} — {(recent.confidence_score * 100).toFixed(1)}%
               </p>
               <p className="text-xs text-slate-500 m-0 cursor-pointer">{getRelativeTime(recent.created_at)}</p>
             </>
