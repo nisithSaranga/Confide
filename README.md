@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔒 Confide
+# <img src="frontend/public/logo.png" width="60" height="70" alt="Confide Logo" align="absmiddle"> Confide
 
 **Privacy-preserving, on-device visual screening for HPV, HSV, and syphilis.**
 
