@@ -11,14 +11,17 @@ import Toast from "../components/Toast";
 const CLASS_NAMES = ["HPV", "HSV", "Syphilis"];
 const SKIN_THRESHOLD = 0.05;
 const CONFIDENCE_THRESHOLD = 0.60;
+const MIN_RESOLUTION = 150;
 
 type ResultState =
   | { status: "loading-models" }
   | { status: "ready" }
   | { status: "classifying" }
   | { status: "not-skin" }
+  | { status: "invalid-image" }
   | { status: "inconclusive"; confidence: number }
   | { status: "result"; condition: string; confidence: number };
+  
 
 export default function Classify() {
   const [modelDeeper, setModelDeeper] = useState<tf.LayersModel | null>(null);
@@ -66,11 +69,23 @@ export default function Classify() {
     setImagePreview(url);
     setState({ status: "classifying" });
 
-    const img = new window.Image();
-    img.src = url;
-    await new Promise((resolve) => { img.onload = resolve; });
+const img = new window.Image();
+img.src = url;
 
-    if (!modelSkin || !modelDeeper || !model35pct) return;
+const isValid = await new Promise<boolean>((resolve) => {
+  img.onload = () => {
+    const meetsResolution = img.naturalWidth >= MIN_RESOLUTION && img.naturalHeight >= MIN_RESOLUTION;
+    resolve(meetsResolution);
+  };
+  img.onerror = () => resolve(false);
+});
+
+if (!isValid) {
+  setState({ status: "invalid-image" });
+  return;
+}
+
+if (!modelSkin || !modelDeeper || !model35pct) return;
 
     const skinInput = preprocessMobileNet(img);
     const skinPred = modelSkin.predict(skinInput) as tf.Tensor;
@@ -114,7 +129,7 @@ export default function Classify() {
   }
 
   const isTerminalState =
-    state.status === "not-skin" || state.status === "inconclusive" || state.status === "result";
+    state.status === "not-skin" || state.status === "inconclusive" || state.status === "result" || state.status === "invalid-image";
 
   return (
     <main className="min-h-screen bg-white">
@@ -181,6 +196,13 @@ export default function Classify() {
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
             <p className="text-slate-700 text-sm">
               This doesn&apos;t appear to be a photo of skin. Please upload a clear image of the affected area.
+            </p>
+          </div>
+        )}
+        {state.status === "invalid-image" && (
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
+            <p className="text-slate-700 text-sm">
+            This image couldn&apos;t be processed — it may be corrupted or too small. Please upload a clear photo and try again.
             </p>
           </div>
         )}
