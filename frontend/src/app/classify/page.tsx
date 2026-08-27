@@ -32,6 +32,7 @@ export default function Classify() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [saved, setSaved] = useState(false);
   
 useEffect(() => {
   async function loadModels() {
@@ -68,6 +69,7 @@ useEffect(() => {
     const url = URL.createObjectURL(file);
     setImagePreview(url);
     setState({ status: "classifying" });
+    setSaved(false);
 
 const img = new window.Image();
 img.src = url;
@@ -125,6 +127,7 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
   function resetForNewImage() {
     if (imagePreview) URL.revokeObjectURL(imagePreview);
     setImagePreview(null);
+    setSaved(false);
     setState({ status: "ready" });
   }
 
@@ -227,25 +230,29 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
             </p>
             <p className="text-sm text-slate-700 mt-4 text-left leading-relaxed">
               {CONDITION_INFO[state.condition]}
-           </p>
-            <button
-  onClick={async () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    setSaveError("Log in to save results.");
-    return;
-  }
-  try {
-    await ResultApiClient.saveResult(token, state.condition, state.confidence);
-    setShowSaveToast(true);
-  } catch {
-    setSaveError("Failed to save result.");
-  }
-}}
-  className="mt-3 text-xs text-green-700 underline hover:text-green-900 cursor-pointer"
->
-  Save this result
-</button>
+           </p>{saved ? (
+            <p className="mt-3 text-xs text-green-700">✓ Result saved</p>
+) : (
+  <button
+    onClick={async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setSaveError("Log in to save results.");
+        return;
+      }
+      try {
+        await ResultApiClient.saveResult(token, state.condition, state.confidence);
+        setSaved(true);
+        setShowSaveToast(true);
+      } catch {
+        setSaveError("Failed to save result.");
+      }
+    }}
+    className="mt-3 text-xs text-green-700 underline hover:text-green-900 cursor-pointer"
+  >
+    Save this result
+  </button>
+)}
 {saveError && <p className="text-red-600 text-xs mt-2">{saveError}</p>}
           </div>
         )}
