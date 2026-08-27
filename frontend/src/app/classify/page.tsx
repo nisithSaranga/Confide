@@ -29,14 +29,11 @@ export default function Classify() {
   const [modelSkin, setModelSkin] = useState<tf.LayersModel | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [state, setState] = useState<ResultState>({ status: "loading-models" });
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-  if (typeof window === "undefined") return false;
-  return !!localStorage.getItem("token");
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [saveError, setSaveError] = useState("");
   
- useEffect(() => {
+useEffect(() => {
   async function loadModels() {
     const { modelDeeper, model35pct, modelSkin } = await getModels();
     setModelDeeper(modelDeeper);
@@ -44,6 +41,9 @@ export default function Classify() {
     setModelSkin(modelSkin);
     setState({ status: "ready" });
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setIsLoggedIn(!!localStorage.getItem("token"));
   loadModels();
 }, []);
 
