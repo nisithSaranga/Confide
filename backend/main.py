@@ -8,9 +8,17 @@ from result_model import SaveResult
 from auth_service import hash_password, verify_password, create_token, verify_token
 from email_service import send_reset_email
 from datetime import datetime, timedelta, timezone
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi import Request
 import secrets
 
 app = FastAPI(title="Confide API")
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,7 +62,8 @@ async def register(user: UserRegister):
     return {"message": "Registered successfully", "userId": new_user_id}
 
 @app.post("/auth/login")
-async def login(credentials: UserLogin):
+@limiter.limit("5/minute")
+async def login(request: Request, credentials: UserLogin):
     user = await user_repository.find_by_email(credentials.email)
     if not user or not verify_password(credentials.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")

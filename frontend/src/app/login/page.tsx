@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Toast from "../components/Toast";
-import { AuthApiClient } from "../lib/authApiClient";
+import { AuthApiClient, getErrorMessage, isRateLimited } from "../lib/authApiClient";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -44,9 +44,13 @@ export default function Login() {
     localStorage.setItem("token", res.data.token);
     setShowToast(true);
     setTimeout(() => { window.location.href = "/dashboard"; }, 1200);
-      } catch (err) {
-    setError("Invalid email or password."); 
-      }  
+     } catch (err) {
+  if (isRateLimited(err)) {
+    setError("Too many login attempts. Please wait a minute and try again.");
+  } else {
+    setError("Invalid email or password.");
+  }
+}
 }}
 >
           <div>

@@ -9,6 +9,10 @@ export function getErrorMessage(err: unknown, fallback: string): string {
   return fallback;
 }
 
+export function isRateLimited(err: unknown): boolean {
+  return axios.isAxiosError(err) && err.response?.status === 429;
+}
+
 export const AuthApiClient = {
   login: (email: string, password: string) =>
     axios.post(`${API_URL}/auth/login`, { email, password }),
