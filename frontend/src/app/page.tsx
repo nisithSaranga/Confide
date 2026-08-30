@@ -103,9 +103,10 @@ export default function Home() {
           </p>
         </div>
       </section>
+
       {/* Why Confide worth using */}
-      <section className="max-w-6xl mx-auto px-15 py-16">
-        <h2 className="text-2xl font-bold text-[#0A306D] mb-10">Why is Confide worth using?</h2>
+      <section className="max-w-6xl mx-auto px-15 py-10">
+        <h2 className="text-2xl font-bold text-[#0A306D] mb-10 text-center">Why is Confide worth using?</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-30">
           {[
             {
@@ -147,20 +148,22 @@ export default function Home() {
               ),
             },
           ].map((item) => (
-            <div key={item.title}>
-              <div className="w-16 h-16 rounded-full bg-[#0B4DA2] flex items-center justify-center mb-4">
+            <div key={item.title}
+              className="relative pr-6 md:pr-8 md:border-r md:border-blue-200 last:border-r-0 text-center"
+              >
+              <div className="w-16 h-16 rounded-full bg-[#0B4DA2] flex items-center justify-center mb-4 mx-auto">
                 {item.icon}
               </div>
               <h3 className="font-semibold text-[#0A306D] text-sm mb-2">{item.title}</h3>
-              <p className="text-slate-600 text-xs leading-relaxed">{item.desc}</p>
+              <p className="text-[#0A306D] text-xs leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
      
       {/* Informational section */}
-      <section className="max-w-5xl mx-auto px-1 py-6 grid md:grid-cols-2 gap-10 items-center">
-        <div className="bg-blue-50 rounded-2xl p-8 flex items-center justify-center">
+      <section className="max-w-6xl mx-auto px-6 md:px-8 py-6 grid md:grid-cols-[320px_1fr] gap-10 items-center bg-[#F3F7FF] border border-[#CFE0FF] rounded-2xl mb-10">
+        <div className="bg-[#E7F0FF] rounded-2xl p-6 flex items-center justify-center min-h-[260px] ">
           <div className="relative w-56">
             <Image
               src="/body.png"
@@ -180,69 +183,76 @@ export default function Home() {
         </div>
 
         <div>
-         <h2 className="text-xl sm:text-2xl font-bold text-[#272b31] mb-4 whitespace-nowrap">
+         <h2 className="text-xl sm:text-2xl font-bold text-[#0A306D] mb-3">
            Stay Informed About Your Anogenital Skin
          </h2>
-          <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+          <p className="text-slate-600 text-sm mb-4 leading-relaxed">
             Confide helps you notice and understand visible changes, privately and on your own terms.
           </p>
           <ul className="space-y-3 text-sm text-slate-700">
             <li className="flex items-start gap-2">
-              <span className="text-[#0eb008] text-lg select-none">&bull;</span>
+              <span className="mt-0.5 w-4 h-4 rounded-full bg-[#16A34A] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 ">✓</span>
               Anogenital skin changes can be uncomfortable to discuss, but frequently lead patients to seek clinical care
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#0eb008] text-lg select-none">&bull;</span>
+              <span className="mt-0.5 w-4 h-4 rounded-full bg-[#16A34A] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 ">✓</span>
               Visible changes may develop gradually and be easy to overlook
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#0eb008] text-lg select-none">&bull;</span>
+              <span className="mt-0.5 w-4 h-4 rounded-full bg-[#16A34A] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 ">✓</span>
               HPV, HSV & Syphilis can present with visually similar symptoms
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#0eb008] text-lg select-none">&bull;</span>
+              <span className="mt-0.5 w-4 h-4 rounded-full bg-[#16A34A] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 ">✓</span>
               Early awareness supports a timely conversation with a healthcare provider
             </li>
           </ul>
         </div>
       </section>
       
-
       {/* How to use Confide */}
       <section className="max-w-6xl mx-auto px-16 pt-6 pb-16 border-t border-slate-100">
-        <h2 className="text-2xl font-bold text-[#0A306D] mb-10">How to use Confide?</h2>
+        <h2 className="text-2xl font-bold text-[#0A306D] mb-10 text-center">How to use Confide?</h2>
         <div className="grid md:grid-cols-3 gap-10">
-          <div>
-            <div className="relative h-40 flex items-center justify-center mb-4">
+          <div className="relative px-8 md:border-r md:border-blue-200">
+            <div className="absolute top-2 left-4 w-7 h-7 rounded-full bg-[#2864B7] text-white text-xs font-bold flex items-center justify-center">
+               1
+            </div>
+            <div className="relative h-28 flex items-center justify-center mb-4">
               <svg viewBox="0 0 100 100" className="w-24 h-24">
                 <rect x="35" y="15" width="50" height="85" rx="4" fill="none" stroke="#334155" strokeWidth="1.5" />
                 <circle cx="50" cy="42" r="14" fill="none" stroke="#FF2B34" strokeWidth="1.2" strokeDasharray="3 2" />
               </svg>
-              <span className="absolute top-2 right-0 bg-[#3665a3] text-white text-[10px] px-2 py-1 rounded-lg">Get close &amp; clear</span>
             </div>
-            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Capture a photo</h3>
-            <p className="text-slate-600 text-xs leading-relaxed">
+            <h3 className="font-semibold text-[#0A306D] text-sm mb-2 text-center">Capture a photo</h3>
+            <p className="text-slate-600 text-xs leading-relaxed text-center">
               Get close enough that the area fills the frame, in good light, without hair or clothing in the way
             </p>
           </div>
 
-          <div>
-            <div className="relative h-40 flex items-center justify-center mb-4">
+          <div className="relative px-8 md:border-r md:border-blue-200">
+            <div className="absolute top-2 left-4 w-7 h-7 rounded-full bg-[#2864B7] text-white text-xs font-bold flex items-center justify-center">
+              2
+            </div>
+            <div className="relative h-28 flex items-center justify-center mb-4">
               <svg viewBox="0 0 100 100" className="w-24 h-24">
                 <rect x="35" y="10" width="50" height="85" rx="4" fill="none" stroke="#334155" strokeWidth="1.5" />
-                <path d="M42 35 Q50 25 58 35 Q50 45 42 35 Z" fill="none" stroke="#0B4DA2" strokeWidth="1.5" />
+                <path d="M38 35 C42 29 46 27 50 27 C54 27 58 29 62 35 C58 41 54 43 50 43 C46 43 42 41 38 35 Z" fill="none" stroke="#0B4DA2"strokeWidth="2" />
+                <circle cx="50" cy="35" r="3.5" fill="none" stroke="#0B4DA2" strokeWidth="2" />
                 <circle cx="50" cy="35" r="20" fill="none" stroke="#0B4DA2" strokeWidth="1" strokeDasharray="2 3" opacity="0.5" />
               </svg>
-              <span className="absolute top-2 right-0 bg-[#3665a3] text-white text-[10px] px-2 py-1 rounded-lg">Stays on your device</span>
             </div>
-            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Submit privately</h3>
-            <p className="text-slate-600 text-xs leading-relaxed">
-              Your photo stays on your device throughout,nothing is uploaded or transmitted to anywhere.
+            <h3 className="font-semibold text-[#0A306D] text-sm mb-2 text-center">Submit privately</h3>
+            <p className="text-slate-600 text-xs leading-relaxed text-center">
+              Your photo stays on your device throughout.Nothing is uploaded or transmitted to anywhere.
             </p>
           </div>
 
-          <div>
-            <div className="relative h-40 flex items-center justify-center mb-4">
+          <div className="relative px-8">
+            <div className="absolute top-2 left-4 w-7 h-7 rounded-full bg-[#2864B7] text-white text-xs font-bold flex items-center justify-center">
+              3
+            </div>
+            <div className="relative h-28 flex items-center justify-center mb-4">
               <svg viewBox="0 0 100 100" className="w-24 h-24">
                 <circle cx="35" cy="30" r="16" fill="none" stroke="#22C55E" strokeWidth="2" />
                 <path d="M28 30 L33 35 L43 24" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -251,97 +261,150 @@ export default function Home() {
                 <line x1="36" y1="68" x2="64" y2="68" stroke="#334155" strokeWidth="1.2" />
                 <line x1="36" y1="74" x2="54" y2="74" stroke="#334155" strokeWidth="1.2" />
               </svg>
-              <span className="absolute top-2 right-0 bg-[#3665a3] text-white text-[10px] px-2 py-1 rounded-lg">Save result</span>
             </div>
-            <h3 className="font-semibold text-[#0A306D] text-sm mb-2">Receive your result</h3>
-            <p className="text-slate-600 text-xs leading-relaxed">
-              Get the result within 5 seconds and related guidance on the next steps to take.
+            <h3 className="font-semibold text-[#0A306D] text-sm mb-2 text-center">Receive your result</h3>
+            <p className="text-slate-600 text-xs leading-relaxed text-center">
+              Receive your result together with related guidance on the next steps to take.
             </p>
           </div>
         </div>
         {/*<p className="text-slate-400 text-xs mt-8">*This is a preliminary screening result, not a confirmed medical diagnosis.</p>*/}
       </section>
+
       {/* How Confide predicts your condition */}
-      <section className="max-w-6xl mx-auto px-16 pt-6 pb-16 border-t border-slate-100">
-        <h2 className="text-2xl font-bold text-[#040f20] mb-14">
+      <section className="max-w-6xl mx-auto px-8 md:px-10 pt-8 pb-6 mb-8 bg-blue-50 border border-blue-100 rounded-2xl">
+        <h2 className="text-xl font-bold text-[#0A306D] text-center mb-7">
           How does Confide analyze images?
         </h2>
 
-        <div className="flex items-start justify-center gap-2 flex-wrap md:flex-nowrap">
+        <div className="flex items-center justify-center gap-2 flex-wrap md:flex-nowrap">
           {[
-            { icon: "ti-camera", title: "Photo captured", desc: "You choose or take a photo", color: "#10B981" },
-            { icon: "ti-device-mobile", title: "Checked on-device", desc: "Confirms the photo shows skin", color: "#10B981" },
-            { icon: "ti-git-compare", title: "Two models compare", desc: "Their findings are combined", color: "#10B981" },
-            { icon: "ti-shield-check", title: "Honest result", desc: "Or a clear \"not sure\" flag", color: "#FF2B34" },
-          ].map((step, i, arr) => (
-            <div key={step.title} className="flex items-start">
-              <div className="w-36 text-center">
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3"
-                  style={{ backgroundColor: step.color }}
-                >
-                  <i className={`ti ${step.icon} text-white text-2xl`} />
-                </div>
-                <div className="text-sm font-medium text-[#0A306D] mb-1">{step.title}</div>
-                <div className="text-xs text-slate-500 leading-relaxed">{step.desc}</div>
-              </div>
-              {i < arr.length - 1 && (
-                <div className="pt-6 px-1 text-slate-300">
-                  <i className="ti ti-arrow-right text-xl" />
-                </div>
-              )}
-            </div>
+  {
+    icon: "ti-camera",
+    title: "Photo Provided",
+    desc: "Select or capture a photo."
+  },
+  {
+    icon: "ti-shield-check",
+    title: "Skin checked on-device",
+    desc: "The app confirms the photo shows skin."
+  },
+  {
+    icon: "ti-brain",
+    title: "Two models compare",
+    desc: "Their predictions are combined to produce a result."
+  },
+  {
+    icon: "ti-file-check",
+    title: "Preliminary result",
+    desc: "A result or an inconclusive outcome is shown."
+  },
+].map((step, i, arr) => (
+            <div key={step.title} className="flex items-center">
+
+  <div className="
+    relative
+    w-[205px] h-[108px]
+    bg-white
+    border border-slate-200
+    rounded-xl
+    shadow-sm
+    px-3 py-3
+  ">
+
+    {/* Step number */}
+    <div className="
+      absolute top-2 left-1
+      w-6 h-6
+      rounded-full
+      bg-[#0BA84A]
+      text-white
+      text-xs font-bold
+      flex items-center justify-center
+    ">
+      {i + 1}
+    </div>
+
+    {/* Icon + text */}
+    <div className="flex items-center gap-2 h-full pt-2">
+
+      <div className="w-10 flex-shrink-0 flex justify-center">
+        <i
+          className={`ti ${step.icon} text-[#10B981] text-[32px]`}
+        />
+      </div>
+
+      <div className="text-left">
+        <div className="text-[12px] font-bold text-[#0A306D] leading-tight mb-1">
+       {step.title}
+       </div>
+
+       <div className="text-[11px] text-slate-600 leading-snug">
+        {step.desc}
+       </div>
+      </div>
+
+    </div>
+  </div>
+
+  {i < arr.length - 1 && (
+    <div className="hidden md:flex items-center px-1">
+      <i className="ti ti-arrow-right text-[#2864B7] text-xl font-bold" />
+    </div>
+  )}
+
+</div>
           ))}
         </div>
 
         <p className="text-center text-slate-400 text-xs mt-8">
-          All four steps happen on your device — nothing is sent anywhere.
+          🔒 All processing happens on your device-images are not uploaded or stored.
         </p>
       </section>
+
       {/* Footer */}
-      <footer className="bg-[#0A306D] px-6 py-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-wrap gap-x-8 gap-y-2 mb-8 text-sm">
-            {/*<a href="#" className="text-white underline hover:text-blue-200">FAQ</a>*/}
-            <Link href="/privacy" className="text-white underline hover:text-blue-200">Privacy Policy</Link>
-              <Link href="/terms" className="text-white underline hover:text-blue-200">Terms of Use</Link>
+      <footer className="bg-[#061F46] border-t border-blue-900/40 px-8 py-5">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-[260px_1fr_320px] gap-8 place-items-stretch">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm self-end justify-self-start">
+            <Link href="/privacy" className="text-blue-300 text-xs hover:text-blue-200">Privacy Policy</Link>
+              <Link href="/terms" className="text-blue-300 text-xs hover:text-blue-200">Terms of Use</Link>
           </div>
-
-          <p className="text-white text-sm leading-relaxed mb-4 max-w-2xl">
-            Confide is not intended to provide a medical diagnosis, it provides a confidential
-            preliminary screening result to help inform whether a conversation with a
-            healthcare provider may be worthwhile.
-          </p>
-
-          <p className="text-blue-200 text-sm mb-8">
-            If you have any questions about our system, contact us via email{" "}
+          <div className="max-w-2xl">
+            <p className="text-blue-200 text-xs leading-5 mb-2">
+              Confide is not intended to provide a medical diagnosis, it provides a confidential
+              preliminary screening result to help inform whether a conversation with a
+              healthcare provider may be worthwhile.
+           </p>
+           <p className="text-blue-200 text-xs leading-5 mb-2">
+              If you have any questions about our system, contact us via email{" "}
             <Link href="mailto:nisithsaranga@gmail.com" className="text-blue-300 underline">
               nisithsaranga13@gmail.com
             </Link>
-          </p>
-          <div className="flex items-center justify-start gap-1">
-  <Link
-    href="https://github.com/nisithSaranga/Confide"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-blue-300 text-xs underline"
-  >
-    Confide
-  </Link>
+           </p>
+          </div>
+          <div className="flex items-center gap-1 text-xs self-end justify-self-end">
+             <Link
+                href="https://github.com/nisithSaranga/Confide"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-300 text-xs"
+                >
+                  Confide
+              </Link>
 
-  <span className="text-blue-300 text-xs"> | </span>
+              <span className="text-blue-300 text-xs"> | </span>
 
-  <Link
-    href="https://www.linkedin.com/in/nisith-saranga-0529732a5/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-blue-300 text-xs underline"
-  >
-    Developed by Nisith Saranga
-  </Link>
+             <Link
+               href="https://www.linkedin.com/in/nisith-saranga-0529732a5/"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="text-blue-300 text-xs"
+                >
+               Developed by Nisith Saranga
+               </Link>
 
-  <span className="text-blue-300 text-xs"> © 2026</span>
-</div>
+                <span className="text-blue-300 text-xs"> © 2026</span>
+          </div>
         </div>
       </footer>
 
