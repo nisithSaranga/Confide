@@ -132,10 +132,10 @@ export default function Dashboard() {
               Assess an anogenital image
             </p>
 
-            <span className="inline-flex items-center gap-3 mt-5 bg-[#1559C1] text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+            {/*<span className="inline-flex items-center gap-3 mt-5 bg-[#1559C1] text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
               Start check
             <span>→</span>
-         </span>
+         </span>*/}
       </div>
         </Link>
 
@@ -155,10 +155,10 @@ export default function Dashboard() {
                 Your saved results
             </p>
 
-            <span className="inline-flex items-center gap-3 mt-5 bg-emerald-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+         {/*}   <span className="inline-flex items-center gap-3 mt-5 bg-emerald-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
                View history
             <span>→</span>
-            </span>
+            </span>*/}
          </div>
         </Link>
 
@@ -178,10 +178,10 @@ export default function Dashboard() {
                Update your login
             </p>
 
-             <span className="inline-flex items-center gap-3 mt-5 bg-violet-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+          {/* <span className="inline-flex items-center gap-3 mt-5 bg-violet-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
                Update password
             <span>→</span>
-            </span>
+            </span>*/}
           </div>
         </Link>
 
@@ -203,17 +203,19 @@ export default function Dashboard() {
                 {recent.predicted_condition}
                </p>
 
-               <p className="text-sm text-slate-500">
-                   Model confidence:{" "}
-                 <span className="font-semibold text-slate-700">
-                    {(recent.confidence_score * 100).toFixed(1)}%
-                 </span>
-               </p>
+               <div className="flex items-center gap-3">
+                    <p className="text-sm text-slate-500">
+                      Model confidence:{" "}
+                      <span className="font-semibold text-slate-700">
+                        {(recent.confidence_score * 100).toFixed(1)}%
+                      </span>
+                    </p>
 
-              <span className="inline-flex items-center gap-2 mt-4 bg-blue-100 text-[#1559C1] text-xs font-medium px-3 py-1.5 rounded-full">
-                 <i className="ti ti-calendar text-sm" />
-                 {getRelativeTime(recent.created_at)}
-              </span>
+                    <span className="inline-flex items-center gap-1.5 bg-blue-100 text-[#1559C1] text-xs font-medium px-2.5 py-1 rounded-full">
+                      <i className="ti ti-calendar text-sm" />
+                      {getRelativeTime(recent.created_at)}
+                    </span>
+               </div>
             </div>
            </>
           ) : (
