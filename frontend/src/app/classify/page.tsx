@@ -70,6 +70,7 @@ useEffect(() => {
     setImagePreview(url);
     setState({ status: "classifying" });
     setSaved(false);
+    setSaveError("");
 
 const img = new window.Image();
 img.src = url;
@@ -128,6 +129,7 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
     if (imagePreview) URL.revokeObjectURL(imagePreview);
     setImagePreview(null);
     setSaved(false);
+    setSaveError("");
     setState({ status: "ready" });
   }
 
@@ -275,60 +277,76 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
             </p>
             <p className="text-sm text-slate-700 mt-4 text-left leading-relaxed">
               {CONDITION_INFO[state.condition]}
-           </p>{saved ? (
-            <p className="mt-3 text-xs text-green-700">✓ Result saved</p>
-) : (
-  <button
-    onClick={async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setSaveError("Log in to save results.");
-        return;
-      }
-      try {
-        await ResultApiClient.saveResult(token, state.condition, state.confidence);
-        setSaved(true);
-        setShowSaveToast(true);
-      } catch {
-        setSaveError("Failed to save result.");
-      }
-    }}
-    className="
-  inline-flex items-center justify-center gap-2
-  mt-4 px-6 py-2.5
-  bg-white
-  border-2 border-[#0B4DA2]
-  rounded-lg
-  text-[#0B4DA2]
-  text-sm font-semibold
-  shadow-sm
-  hover:bg-blue-50
-  transition-colors
-  cursor-pointer
-"
-  >
-    <>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <polyline points="7 10 12 15 17 10" />
-    <line x1="12" y1="15" x2="12" y2="3" />
-  </svg>
+           </p>
+            {saved ? (
+                <p className="mt-4 min-h-[44px] flex items-center justify-center text-sm font-medium text-green-700">
+                  ✓ Result saved
+                </p>
+              ) : saveError === "Log in to save results." ? (
+                <p className="mt-4 min-h-[44px] flex items-center justify-center text-sm font-medium text-red-600">
+                  Log in to save results.
+                </p>
+              ) : (
+              <button
+                onClick={async () => {
+                  const token = localStorage.getItem("token");
 
-  Save result
-</>
-  </button>
-)}
-{saveError && <p className="text-red-600 text-xs mt-2">{saveError}</p>}
+                  if (!token) {
+                    setSaveError("Log in to save results.");
+                    return;
+                  }
+
+                  try {
+                    await ResultApiClient.saveResult(
+                      token,
+                      state.condition,
+                      state.confidence
+                    );
+                    setSaved(true);
+                    setShowSaveToast(true);
+                  } catch {
+                    setSaveError("Failed to save result.");
+                  }
+                }}
+                className="
+                  inline-flex items-center justify-center gap-2
+                  mt-4 px-6 py-2.5
+                  bg-white
+                  border-2 border-[#0B4DA2]
+                  rounded-lg
+                  text-[#0B4DA2]
+                  text-sm font-semibold
+                  shadow-sm
+                  hover:bg-blue-50
+                  transition-colors
+                  cursor-pointer
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+
+                Save result
+              </button>
+            )}
+
+            {saveError === "Failed to save result." && (
+              <p className="text-red-600 text-xs mt-2">
+                {saveError}
+              </p>
+            )}
           </div>
         )}
 
@@ -336,33 +354,33 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
           <button
             onClick={resetForNewImage}
             className="w-full h-12 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-semibold text-sm mt-4 hover:bg-blue-50 transition-colors cursor-pointer"
-          >
-            Try another photo
+             >
+               Try another photo
           </button>
-        )}
-        {isTerminalState && (
-  <div className="mt-4 flex items-center justify-center gap-2 text-slate-600">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-      className="text-slate-500"
-    >
-      <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4V6Z" />
-    </svg>
+                  )}
+                  {isTerminalState && (
+            <div className="mt-4 flex items-center justify-center gap-2 text-slate-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+                className="text-slate-500"
+              >
+                <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4V6Z" />
+              </svg>
 
-    <span className="text-sm font-medium">
-      No images are stored. Your privacy is protected.
-    </span>
-  </div>
-)}
+              <span className="text-sm font-medium">
+                No images are stored. Your privacy is protected.
+              </span>
+            </div>
+          )}
       </div>
       {showSaveToast && (
-  <Toast message="Result saved" onClose={() => setShowSaveToast(false)} />
-  )}
+         <Toast message="Result saved" onClose={() => setShowSaveToast(false)} />
+      )}
     </main>
   );
 }
