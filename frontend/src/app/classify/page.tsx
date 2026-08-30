@@ -136,30 +136,73 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
 
   return (
     <main className="min-h-screen bg-white">
-      <nav className="bg-[#0A306D] px-47 py-4 flex items-center gap-3 w-full">
-      <Link href={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-3">
-        <Image
-          src="/logo.png"
-          alt="Confide"
-          width={100}
-          height={100}
-        />
-      <span className="text-white font-bold text-lg">
+      <nav className="bg-[#0A306D] px-47 py-4 flex items-center">
+
+  {/* Logo + slogan — same positioning as landing page */}
+  <Link
+    href={isLoggedIn ? "/dashboard" : "/"}
+    className="flex items-center gap-3 cursor-pointer"
+  >
+    <Image
+      src="/logo.png"
+      alt="Confide"
+      width={100}
+      height={100}
+    />
+
+    <div>
+      <div className="text-white font-bold text-lg leading-none cursor-pointer">
         Confide - Private STI Screening for Men
-      </span>
-          </Link>
-    </nav>
+      </div>
+    </div>
+  </Link>
 
+  {/* Right side — positioned where Log in/Register sit on landing page */}
+  <div className="flex items-center px-10 gap-6 ml-auto">
+    <div className="flex items-center gap-2 text-white/90 text-sm font-medium px-4 py-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+
+      <span>Private &amp; Secure</span>
+    </div>
+  </div>
+</nav>
+     
       <div className="max-w-lg mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold text-[#0A306D] mb-6">Let&apos;s check it</h1>
-
+        {isTerminalState ? (
+         <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold text-[#0A306D]">
+            Your Result
+         </h1>
+         <p className="text-sm text-slate-500">
+           Assessment completed
+         </p>
+      </div>
+     ) : (
+       <h1 className="text-2xl font-bold text-[#0A306D] mb-6">
+         Start your STI check
+       </h1>
+     )}
+      {!isTerminalState && (
         <div className="bg-blue-50 rounded-xl p-4 mb-6">
           <p className="text-sm text-slate-700">
-            Confide checks for three conditions: <strong>HPV, HSV & Syphilis</strong>.
-            Images outside this scope may produce unreliable results.
+            Confide checks for three conditions: <strong>HPV, HSV & Syphilis</strong> using <strong>male anogenital images only.</strong>
+            &nbsp;Images outside this scope may produce unreliable results.
           </p>
         </div>
-
+      )}
         {state.status === "loading-models" && (
           <div className="text-center py-8 text-slate-500 text-sm">Loading models…</div>
         )}
@@ -182,11 +225,11 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
         {imagePreview && (
           <div className="relative mb-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imagePreview} alt="Uploaded" className="w-full rounded-xl" />
+            <img src={imagePreview} alt="Uploaded" className="w-full max-h-[360px] object-contain rounded-xl" style={{ borderRadius: "0.75rem" }}/>
             {isTerminalState && (
               <button
                 onClick={resetForNewImage}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center text-slate-600 hover:bg-white text-lg leading-none"
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center text-slate-600 hover:bg-white text-lg leading-none cursor-pointer"
                 aria-label="Remove image"
               >
                 ×
@@ -221,10 +264,12 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
 
         {state.status === "result" && (
          <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 text-center">
-         <p className="font-semibold text-[#0A306D] mb-1">{state.condition}</p>
-         <p className="text-[#0B4DA2] text-sm mb-3">
-              {(state.confidence * 100).toFixed(1)}% confidence
-            </p>
+         <p className="text-xl font-bold text-[#0A306D] mb-2">
+            Preliminary result: {state.condition}
+        </p>
+         <p className="text-[#0B4DA2] text-base font-semibold mb-3">
+          Model confidence: {(state.confidence * 100).toFixed(1)}%
+        </p>
             <p className="text-sm font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3">
                ⚠️ This is a preliminary screening result, not a confirmed medical diagnosis.
             </p>
@@ -248,9 +293,39 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
         setSaveError("Failed to save result.");
       }
     }}
-    className="mt-3 text-xs text-green-700 underline hover:text-green-900 cursor-pointer"
+    className="
+  inline-flex items-center justify-center gap-2
+  mt-4 px-6 py-2.5
+  bg-white
+  border-2 border-[#0B4DA2]
+  rounded-lg
+  text-[#0B4DA2]
+  text-sm font-semibold
+  shadow-sm
+  hover:bg-blue-50
+  transition-colors
+  cursor-pointer
+"
   >
-    Save this result
+    <>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+
+  Save result
+</>
   </button>
 )}
 {saveError && <p className="text-red-600 text-xs mt-2">{saveError}</p>}
@@ -265,6 +340,25 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
             Try another photo
           </button>
         )}
+        {isTerminalState && (
+  <div className="mt-4 flex items-center justify-center gap-2 text-slate-600">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      className="text-slate-500"
+    >
+      <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4V6Z" />
+    </svg>
+
+    <span className="text-sm font-medium">
+      No images are stored. Your privacy is protected.
+    </span>
+  </div>
+)}
       </div>
       {showSaveToast && (
   <Toast message="Result saved" onClose={() => setShowSaveToast(false)} />
