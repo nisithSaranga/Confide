@@ -14,7 +14,7 @@ export default function Register() {
   const [showToast, setShowToast] = useState(false);
 
   return (
-  <main className="min-h-screen bg-white">
+  <main className="min-h-screen bg-[#F7FAFE]">
     <div className="w-full bg-[#0A306D] px-47 py-4">
       <Link href="/" className="flex items-center gap-3 w-full">
         <Image src="/logo.png" alt="Confide" width={100} height={100} />
@@ -24,13 +24,38 @@ export default function Register() {
       </Link>
     </div>
 
-    <div className="min-h-[calc(100vh-88px)] flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
+    <div className="min-h-[calc(100vh-88px)] flex items-center justify-center px-6 py-4">
+      <div className="w-full max-w-lg bg-white border border-blue-100 rounded-2xl shadow-lg px-10 pt-8 pb-4">
+        <div className="flex justify-center mb-2">
+         <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#0B4DA2"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <line x1="19" x2="19" y1="8" y2="14" />
+      <line x1="22" x2="16" y1="11" y2="11" />
+    </svg>
+  </div>
+</div>
 
-        <h1 className="text-4xl font-bold text-[#0A306D] mb-8">Register</h1>
+<h1 className="text-3xl font-bold text-[#0A306D] text-center">
+  Create your account
+</h1>
 
+<p className="text-slate-500 text-sm text-center mt-2 mb-5">
+  Register for a better experience with Confide.
+</p>
         <form
-  className="space-y-6"
+  className="space-y-4"
 onSubmit={async (e) => {
   e.preventDefault();
 
@@ -69,44 +94,98 @@ onSubmit={async (e) => {
 >
           <div>
             <label className="text-base text-slate-800 block mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-14 px-4 border border-slate-300 rounded-md text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
-            />
-            <p className="text-sm text-slate-400 mt-2">
-              Please provide a valid email address. An email with a registration confirmation link will be sent to it.
-            </p>
+            <div className="relative">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+  >
+    <rect width="20" height="16" x="2" y="4" rx="2" />
+    <path d="m22 7-10 5L2 7" />
+  </svg>
+
+  <input
+    type="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    className="w-full h-14 pl-12 pr-4 bg-[#F8FBFF] border border-slate-300 rounded-xl text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
+  />
+</div>
+            {/*<p className="text-sm text-slate-400 mt-2">
+              Please provide a valid email address. 
+            </p>*/}
           </div>
 
           <div>
             <label className="text-base text-slate-800 block mb-2">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                if (passwordError) setPasswordError("");
-              }}
-              className="w-full h-14 px-4 border border-slate-300 rounded-md text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
-            />
+            <div className="relative">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+  >
+    <rect width="16" height="12" x="4" y="10" rx="2" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+  </svg>
+
+  <input
+    type="password"
+    value={password}
+    onChange={(e) => {
+      setPassword(e.target.value);
+      if (passwordError) setPasswordError("");
+    }}
+    className="w-full h-14 pl-12 pr-4 bg-[#F8FBFF] border border-slate-300 rounded-xl text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
+  />
+</div>
             {passwordError && (
               <p className="text-red-600 text-sm mt-2">{passwordError}</p>
             )}
           </div>
 
           <div>
-            <label className="text-base text-slate-800 block mb-2">Confirm password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full h-14 px-4 border border-slate-300 rounded-md text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
-            />
+          <label className="text-base text-slate-800 block mb-2">Confirm password</label>
+            <div className="relative">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+  >
+    <rect width="16" height="12" x="4" y="10" rx="2" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+  </svg>
+
+  <input
+    type="password"
+    value={confirmPassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
+    className="w-full h-14 pl-12 pr-4 bg-[#F8FBFF] border border-slate-300 rounded-xl text-base focus:outline-none focus:border-[#0B4DA2] focus:ring-1 focus:ring-[#0B4DA2]"
+  />
+</div>
           </div>
 
-          <label className="flex items-start gap-3 text-base text-slate-800 cursor-pointer">
+          <label className="flex items-start gap-3 text-sm text-slate-800 cursor-pointer">
             <input
               type="checkbox"
               checked={accepted}
@@ -123,25 +202,28 @@ onSubmit={async (e) => {
 
            <button
             type="submit"
-            className="w-full h-14 rounded-full bg-[#0B4DA2] text-white font-bold text-base hover:brightness-90 transition-all mt-4 cursor-pointer"
+            className="w-full h-14 rounded-xl bg-[#0B4DA2] text-white font-bold text-base hover:bg-[#093F86] transition-colors cursor-pointer"
           >
             Register
           </button>
-
-          <Link href="/login">
-            <button
-              type="button"
-              className="w-full h-14 rounded-full border-2 border-[#0B4DA2] text-[#0B4DA2] font-bold text-base hover:bg-blue-50 transition-colors cursor-pointer"
-            >
-              I have an Account
-            </button>
-          </Link>
+           <p className="text-center text-slate-600 text-sm">
+             Already have an account?{" "}
+           <Link
+             href="/login"
+             className="text-[#053a7f] font-semibold hover:underline"
+             >
+             &nbsp;Log in
+           </Link>
+           </p>
         </form>
       </div>
     </div>
-    {showToast && (
-  <Toast message="Registered successfully" onClose={() => setShowToast(false)} />
-)}
+     {showToast && (
+           <Toast
+             message="Logged in successfully"
+             onClose={() => setShowToast(false)}
+           />
+     )}
   </main>
 );
 }
