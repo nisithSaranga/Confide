@@ -23,14 +23,15 @@ Confide is a web application that classifies photographs of common male anogenit
 
 ## Screenshots
 
-<table>confide_landing
+## Screenshots
+
+<table>
   <tr>
-    <td><img src="docs/screenshots/confide_landing.png" width="400"/></td>
-    <td><img src="docs/screenshots/confide_landing2.png" width="400"/></td>
+    <td colspan="2"><img src="docs/screenshots/confide_landing.png" width="800"/></td>
   </tr>
   <tr>
+    <td><img src="docs/screenshots/confide_landing2.png" width="400"/></td>
     <td><img src="docs/screenshots/dashboard.png" width="400"/></td>
-    <td><img src="docs/screenshots/classify.png" width="400"/></td>
   </tr>
 </table>
 
