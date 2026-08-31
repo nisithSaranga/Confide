@@ -220,7 +220,7 @@ onSubmit={async (e) => {
     </div>
      {showToast && (
            <Toast
-             message="Logged in successfully"
+             message="Registered successfully"
              onClose={() => setShowToast(false)}
            />
      )}

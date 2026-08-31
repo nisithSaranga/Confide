@@ -250,7 +250,7 @@ if (!modelSkin || !modelDeeper || !model35pct) return;
         {state.status === "invalid-image" && (
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
             <p className="text-slate-700 text-sm">
-            This image couldn&apos;t be processed — it may be corrupted or too small. Please upload a clear photo and try again.
+            This image couldn&apos;t be processed - it may be corrupted or too small. Please upload a clear photo and try again.
             </p>
           </div>
         )}
