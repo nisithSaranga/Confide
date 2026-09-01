@@ -20,9 +20,6 @@ Confide is a web application that classifies photographs of common male anogenit
 > Final-year BSc (Hons) Software Engineering project, Cardiff Metropolitan University.
 
 ---
-
-## Screenshots
-
 ## Screenshots
 
 <table>
